@@ -5,5 +5,6 @@ const userController = require('../controllers/userController');
 
 
 router.post('/user',userController.dodaj);
+router.get('/userData',userController.data);
 
 module.exports = router;

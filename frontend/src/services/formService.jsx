@@ -6,13 +6,15 @@ export function formService() {
   const [nazwisko, setNazwisko] = useState('');
   const [email, setEmail] = useState('');
   const [id, setId] = useState('');
+  const [countdown, setCountdown] = useState('');
   const [postData, setPostData] = useState({});
 
-  useEffect(()=>{
-    setPostData({imie, nazwisko, email, id});
-  },[imie, nazwisko, email, id]);
+  useEffect(() => {
+    setPostData({ imie, nazwisko, email, id, countdown });
+  }, [imie, nazwisko, email, id, countdown]);
+
   const handleSendData = async () => {
-    try { 
+    try {
       console.log('Sending data:', postData);
       const res = await axios.post('https://crispy-xylophone-44q6rq6wwxjcjrjg-4000.app.github.dev/user', postData);
       console.log('Response:', res);
@@ -20,12 +22,13 @@ export function formService() {
       setNazwisko('');
       setEmail('');
       setId('');
+      setCountdown('');
     } catch (err) {
       console.error('Error sending message:', err);
     }
   };
 
   return {
-    imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, handleSendData,
+    imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, countdown, setCountdown, handleSendData,
   };
 }
