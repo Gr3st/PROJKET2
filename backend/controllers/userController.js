@@ -1,9 +1,9 @@
 const Schemas = require('../models/schemas');
 
 exports.dodaj = async (req, res) => {
-    const { imie, nazwisko, email, id, countdown } = req.body;
+    const { imie, nazwisko, email, id, cena, countdown } = req.body;
 
-    if (!imie || !nazwisko || !email || !id || !countdown) {
+    if (!imie || !nazwisko || !email || !id || !countdown || !cena) {
         return res.status(400).send('All fields are required');
     }
 
@@ -18,7 +18,7 @@ exports.dodaj = async (req, res) => {
         const [hours, minutes] = countdown.split(':').map(Number);
         const countdownTime = (hours * 60 * 60) + (minutes * 60); // Convert to seconds
 
-        const newUser = new Schemas.Users({ imie, nazwisko, email, id, countdown: countdownTime });
+        const newUser = new Schemas.Users({ imie, nazwisko, email, id, cena, countdown: countdownTime });
         await newUser.save();
         res.send('User added successfully');
     } catch (error) {

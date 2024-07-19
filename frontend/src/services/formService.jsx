@@ -6,6 +6,7 @@ export function formService() {
   const [nazwisko, setNazwisko] = useState('');
   const [email, setEmail] = useState('');
   const [id, setId] = useState('');
+  const [cena, setCena] = useState('');
   const [countdown, setCountdown] = useState('');
   const [postData, setPostData] = useState({});
 
@@ -29,6 +30,6 @@ export function formService() {
   };
 
   return {
-    imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, countdown, setCountdown, handleSendData,
+    imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, cena, setCena, countdown, setCountdown, handleSendData,
   };
 }
