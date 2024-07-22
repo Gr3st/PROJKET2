@@ -76,6 +76,7 @@ function UserForm() {
       <div>
         Czas: 
         <select onChange={handleTimeRangeChange}>
+          <option value="-">-</option>
           {dataPrice.map(res => (
             <option key={res.timeRange} value={res.timeRange}>{res.timeRange}</option>
           ))}
@@ -90,14 +91,14 @@ function UserForm() {
       <button onClick={handleAddChild}>Dodaj Dziecko</button>
 
       <div className="user-tabela">
-        <div className="user-row">
+        <div className="user-row-title">
           <div className="imie">IMIE</div>
           <div className="nazwisko">NAZWISKO</div>
           <div className="email">EMAIL</div>
           <div className="id">ID</div>
           <div className="cena">CENA</div>
           <div className="czas">CZAS</div>
-          <div className="actions">Akcje</div>
+          <div className="akcje">Akcje</div>
         </div>
         {data.map(res => (
           <div className="user-row" key={res.id}>
@@ -107,7 +108,7 @@ function UserForm() {
             <div className="id">{res.id}</div>
             <div className="cena">{res.cena}</div>
             <div className="czas">{calculateTime(res.remainingTime, res.expirationTime)}</div>
-            <div className="actions">
+            <div className="akcje">
               <button onClick={() => deleteUser(res.id)}>Usuń</button>
             </div>
           </div>

@@ -13,17 +13,22 @@
     justify-content: center;
     align-items: center;
 }
-.user-row{
+.user-row, .user-row-title{
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 }
-.imie, .nazwisko, .email, .id, .cena, .czas{
-    width: 15%;
+.imie, .nazwisko, .email, .id, .cena, .czas, .akcje{
+    width: 10%;
+    height: auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid black;
+    /* border: 1px solid black; */
+}
+.user-row-title .imie, .user-row-title .nazwisko, .user-row-title .email, .user-row-title .id, .user-row-title .cena, 
+.user-row-title .czas,.user-row-title .akcje{
+   border-bottom: 1px solid #333333;
 }

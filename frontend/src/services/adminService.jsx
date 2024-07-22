@@ -6,7 +6,7 @@ export function adminService() {
   const [czas, setCzas] = useState('');
   const [cena, setCena] = useState('');
   const [postData, setPostData] = useState({});
-  const { data, handleGetData } = getData(); // Usunięto setData, ponieważ nie jest używane
+  const { data, handleGetData } = getData();
 
   useEffect(() => {
     setPostData({ czas, cena });
@@ -24,6 +24,13 @@ export function adminService() {
     }
   };
 
+  const formatCell = (value) => {
+    if (typeof value === 'string' && value.includes(';')) {
+      return `"${value.replace(/"/g, '""')}"`; // Enclose in double quotes if it contains a separator
+    }
+    return value;
+  };
+
   const generateCSV = (data) => {
     if (!data.length) {
       console.error('No data available to generate CSV');
@@ -32,14 +39,14 @@ export function adminService() {
 
     const header = ['Imię', 'Nazwisko', 'Email', 'ID', 'Cena', 'Data Wejścia', 'Data Wyjścia', 'Odliczanie'];
     const rows = data.map(user => [
-      user.imie || '',
-      user.nazwisko || '',
-      user.email || '',
-      user.id || '',
-      user.cena || '',
-      new Date(user.entryDate).toLocaleDateString() || '',
-      user.exitDate ? new Date(user.exitDate).toLocaleDateString() : '',
-      user.countdown || ''
+      formatCell(user.imie || ''),
+      formatCell(user.nazwisko || ''),
+      formatCell(user.email || ''),
+      formatCell(user.id || ''),
+      formatCell(user.cena || ''),
+      formatCell(new Date(user.entryDate).toLocaleDateString() || ''),
+      formatCell(user.exitDate ? new Date(user.exitDate).toLocaleDateString() : ''),
+      formatCell(user.countdown || '')
     ]);
 
     const csvContent = [

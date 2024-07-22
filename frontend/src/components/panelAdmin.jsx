@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { adminService } from '../services/adminService';
+import "../style/adminStyle.css";
 
 const PanelAdmin = () => {
   const { cena, setCena, czas, setCzas, handleSetPrice, downloadCSV } = adminService();
@@ -38,12 +39,12 @@ const PanelAdmin = () => {
   };
 
   return (
-    <div>
+    <div className='Panel-Container'>
       <h2>Panel Administracyjny</h2>
       <div>
         <h3>Ustaw Limity Czasowe</h3>
       </div>
-      <div>
+      <div className='panel-inside'>
         <h3>Ustaw Czas</h3>
         <input
           type="text"
@@ -57,6 +58,8 @@ const PanelAdmin = () => {
           value={cena}
           onChange={(e) => setCena(e.target.value)}
         />
+      </div>
+      <div className="btn-admin">
         <button onClick={handleSetPrice}>DODAJ</button>
         <button onClick={downloadCSV}>Pobierz CSV</button>
       </div>
