@@ -24,7 +24,7 @@ const adminSchema = new Schema({
 // Schemat dla cen
 const cenaSchema = new Schema({
     timeRange: {type: String, required: true},  // Zakres czasu np. "30 minut", "1 godzina"
-    cena: {type: Number, required: true},  // Cena za dany zakres czasu
+    cena: {type: String, required: true},  // Cena za dany zakres czasu
 });
 
 const Users = mongoose.model('Users', userSchema, 'users');

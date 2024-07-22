@@ -11,8 +11,8 @@ export function formService() {
   const [postData, setPostData] = useState({});
 
   useEffect(() => {
-    setPostData({ imie, nazwisko, email, id, countdown });
-  }, [imie, nazwisko, email, id, countdown]);
+    setPostData({ imie, nazwisko, email, id, countdown, cena });
+  }, [imie, nazwisko, email, id, countdown, cena]);
 
   const handleSendData = async () => {
     try {
@@ -24,6 +24,7 @@ export function formService() {
       setEmail('');
       setId('');
       setCountdown('');
+      setCena('');
     } catch (err) {
       console.error('Error sending message:', err);
     }

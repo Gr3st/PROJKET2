@@ -1,12 +1,21 @@
 import '../style/userForm.css';
 import { formService } from '../services/formService';
+import { adminService } from '../services/adminService';
 import { getData } from '../services/getData';
+import { getPrice } from '../services/getPrice';
 import { useEffect, useState } from 'react';
 
 function userForm() {
   const { imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, cena, setCena, countdown, setCountdown, handleSendData } = formService();
+  const { cena: adminCena, czas} = adminService();
   const { data, handleGetData } = getData();
+  const {dataPrice, handleGetPrice} = getPrice();
   const [currentTime, setCurrentTime] = useState(Date.now());
+
+  
+  useEffect(()=>{
+    handleGetPrice();
+  },[czas, adminCena])
 
   useEffect(() => {
     handleGetData();
@@ -45,13 +54,21 @@ function userForm() {
       <input type="text" placeholder='Nazwisko' value={nazwisko} onChange={(e) => setNazwisko(e.target.value)} onKeyDown={handleKeyPress} />
       <input type="text" placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={handleKeyPress} />
       <input type="text" placeholder='ID' value={id} onChange={(e) => setId(e.target.value)} onKeyDown={handleKeyPress} />
-      <input type="text" placeholder='CENA' value={cena} onChange={(e) => setCena(e.target.value)} onKeyDown={handleKeyPress} />
-      <select>
-
-        <option></option>
-        
+      {/* <input type="text" placeholder='CENA' value={cena} onChange={(e) => setCena(e.target.value)} onKeyDown={handleKeyPress} /> */}
+      <select onChange={(e) => setCountdown(e.target.value)}>
+        {dataPrice.map(res => (
+          <option key={res.timeRange} value={res.timeRange}>{res.timeRange}</option>
+        ))}
       </select>
-      <input type="text" placeholder='Countdown (hours:minutes)' value={countdown} onChange={(e) => setCountdown(e.target.value)} onKeyDown={handleKeyPress} />
+
+      <select onChange={(e) => setCena(e.target.value)}>
+        {dataPrice.map(res => (
+          <option key={res.cena} value={res.cena}>{res.cena}zł</option>
+        ))}
+      </select>
+
+
+      {/* <input type="text" placeholder='Countdown (hours:minutes)' value={countdown} onChange={(e) => setCountdown(e.target.value)} onKeyDown={handleKeyPress} /> */}
       <button onClick={handleAddChild}>Dodaj Dziecko</button>
       <div className="user-tabela">
         <div className='user-row'>

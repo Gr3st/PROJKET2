@@ -8,5 +8,6 @@ const priceController = require('../controllers/priceController');
 router.post('/user',userController.dodaj);
 router.get('/userData',userController.data);
 router.post('/addPrice',priceController.dodajCene);
+router.get('/getPrice',priceController.dataPrice);
 
 module.exports = router;

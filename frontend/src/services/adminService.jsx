@@ -10,7 +10,7 @@ export function adminService() {
     setPostData({ czas, cena });
   }, [czas, cena]);
 
-  const handleSetPrice= async () => {
+  const handleSetPrice = async () => {
     try {
       console.log('Sending data:', postData);
       const res = await axios.post('https://crispy-xylophone-44q6rq6wwxjcjrjg-4000.app.github.dev/addPrice', postData);
