@@ -1,4 +1,5 @@
 import '../style/userForm.css';
+import axios from 'axios';
 import { formService } from '../services/formService';
 import { adminService } from '../services/adminService';
 import { getData } from '../services/getData';
@@ -11,6 +12,17 @@ function UserForm() {
   const { data, handleGetData } = getData();
   const { dataPrice, handleGetPrice } = getPrice();
   const [currentTime, setCurrentTime] = useState(Date.now());
+
+  // Funkcja do usuwania użytkownika
+  const deleteUser = async (userId) => {
+    try {
+        const response = await axios.delete(`https://crispy-xylophone-44q6rq6wwxjcjrjg-4000.app.github.dev/user/${userId}`); // Użyj lokalnego serwera
+        console.log('User deleted:', response.data);
+        handleGetData(); // Odśwież dane po usunięciu użytkownika
+    } catch (error) {
+        console.error('Error deleting user:', error);
+    }
+  };
 
   useEffect(() => {
     handleGetPrice();
@@ -42,9 +54,9 @@ function UserForm() {
   const handleAddChild = () => {
     const countdownParts = countdown.split(':');
     const countdownSeconds = parseInt(countdownParts[0], 10) * 3600 + parseInt(countdownParts[1], 10) * 60;
-    const expirationTime = Date.now() + countdownSeconds * 1000;
+    const expirationTime = new Date(Date.now() + countdownSeconds * 1000);
 
-    handleSendData({ imie, nazwisko, email, id, expirationTime });
+    handleSendData({ imie, nazwisko, email, id, countdown: countdownSeconds, exitDate: expirationTime });
   };
 
   const handleTimeRangeChange = (e) => {
@@ -72,7 +84,7 @@ function UserForm() {
 
       <div>
         Cena: 
-        {cena}{cena&&"zł"}
+        {cena}{cena && "zł"}
       </div>
 
       <button onClick={handleAddChild}>Dodaj Dziecko</button>
@@ -85,6 +97,7 @@ function UserForm() {
           <div className="id">ID</div>
           <div className="cena">CENA</div>
           <div className="czas">CZAS</div>
+          <div className="actions">Akcje</div>
         </div>
         {data.map(res => (
           <div className="user-row" key={res.id}>
@@ -94,6 +107,9 @@ function UserForm() {
             <div className="id">{res.id}</div>
             <div className="cena">{res.cena}</div>
             <div className="czas">{calculateTime(res.remainingTime, res.expirationTime)}</div>
+            <div className="actions">
+              <button onClick={() => deleteUser(res.id)}>Usuń</button>
+            </div>
           </div>
         ))}
       </div>

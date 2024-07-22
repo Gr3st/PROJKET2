@@ -17,8 +17,9 @@ exports.dodaj = async (req, res) => {
         // Parse the countdown time in "hours:minutes" format
         const [hours, minutes] = countdown.split(':').map(Number);
         const countdownTime = (hours * 60 * 60) + (minutes * 60); // Convert to seconds
-
+        
         const newUser = new Schemas.Users({ imie, nazwisko, email, id, cena, countdown: countdownTime });
+        newUser.updateExitDate();
         await newUser.save();
         res.send('User added successfully');
     } catch (error) {
@@ -39,6 +40,24 @@ exports.data = async (req, res) => {
         });
 
         res.json(usersWithRemainingTime);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+// Nowa funkcja do usuwania użytkownika
+exports.usun = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const result = await Schemas.Users.deleteOne({ id });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).send('User not found');
+        }
+
+        res.send('User deleted successfully');
     } catch (error) {
         console.error('Error:', error);
         res.status(500).send('Internal Server Error');
