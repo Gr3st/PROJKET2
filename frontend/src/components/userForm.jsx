@@ -77,6 +77,14 @@ function UserForm() {
     updateExpirationStatus(userId, new Date().toISOString(), overdueTime);
   };
 
+  useEffect(() => {
+    data.forEach(res => {
+      if (!res.exitDate && res.remainingTime <= 0) {
+        handleStop(res.id, res.exitDate);
+      }
+    });
+  }, [data, currentTime]);
+
   return (
     <div className="user-form">
       <input type="text" placeholder="Imie" value={imie} onChange={(e) => setImie(e.target.value)} onKeyDown={handleKeyPress} />
@@ -127,7 +135,6 @@ function UserForm() {
               ) : (
                 res.remainingTime <= 0 ? (
                   <>
-                    {!res.exitDate&&handleStop(res.id, res.exitDate)}
                     {`Przekroczono czas o ${Math.floor(calculateOverdueTime(res.exitDate) / 3600)}h ${Math.floor((calculateOverdueTime(res.exitDate) % 3600) / 60)}m ${Math.floor(calculateOverdueTime(res.exitDate) % 60)}s`}
                   </>
                 ) : (
