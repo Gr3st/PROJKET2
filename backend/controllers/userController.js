@@ -19,9 +19,30 @@ exports.dodaj = async (req, res) => {
         const countdownTime = (hours * 60 * 60) + (minutes * 60); // Convert to seconds
         
         const newUser = new Schemas.Users({ imie, nazwisko, email, id, cena, countdown: countdownTime });
-        newUser.updateExitDate();
+        // newUser.updateExitDate();
         await newUser.save();
         res.send('User added successfully');
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+// Update user expiration status
+exports.updateExpiration = async (req, res) => {
+    const { id } = req.params;
+    const { exitDate } = req.body;
+
+    try {
+        const user = await Schemas.Users.findOne({ id });
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        user.exitDate = exitDate;
+        await user.save();
+
+        res.send('User expiration status updated successfully');
     } catch (error) {
         console.error('Error:', error);
         res.status(500).send('Internal Server Error');
@@ -36,7 +57,7 @@ exports.data = async (req, res) => {
         const usersWithRemainingTime = users.map(user => {
             const elapsedTime = (currentTime - new Date(user.entryDate).getTime()) / 1000;
             const remainingTime = Math.max(user.countdown - elapsedTime, 0);
-            return { ...user.toObject(), remainingTime };
+            return { ...user.toObject(), remainingTime};
         });
 
         res.json(usersWithRemainingTime);

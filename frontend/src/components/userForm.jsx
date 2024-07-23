@@ -13,14 +13,13 @@ function UserForm() {
   const { dataPrice, handleGetPrice } = getPrice();
   const [currentTime, setCurrentTime] = useState(Date.now());
 
-  // Funkcja do usuwania użytkownika
   const deleteUser = async (userId) => {
     try {
-        const response = await axios.delete(`https://crispy-xylophone-44q6rq6wwxjcjrjg-4000.app.github.dev/user/${userId}`); // Użyj lokalnego serwera
-        console.log('User deleted:', response.data);
-        handleGetData(); // Odśwież dane po usunięciu użytkownika
+      const response = await axios.delete(`https://crispy-xylophone-44q6rq6wwxjcjrjg-4000.app.github.dev/user/${userId}`);
+      console.log('User deleted:', response.data);
+      handleGetData();
     } catch (error) {
-        console.error('Error deleting user:', error);
+      console.error('Error deleting user:', error);
     }
   };
 
@@ -42,21 +41,21 @@ function UserForm() {
     }
   };
 
-  const calculateTime = (remainingTime, expirationTime) => {
-    if (remainingTime > 0) {
-      return `${Math.floor(remainingTime / 3600)}h ${Math.floor((remainingTime % 3600) / 60)}m ${Math.floor(remainingTime % 60)}s`;
-    } else {
-      const elapsed = (currentTime - expirationTime) / 1000;
-      return `Elapsed: ${Math.floor(elapsed / 3600)}h ${Math.floor((elapsed % 3600) / 60)}m ${Math.floor(elapsed % 60)}s`;
+  const updateExpirationStatus = async (userId, exitDate, elapsedTime) => {
+    try {
+      await axios.put(`https://crispy-xylophone-44q6rq6wwxjcjrjg-4000.app.github.dev/user/${userId}/expiration`, { exitDate, elapsedTime });
+      handleGetData();
+    } catch (error) {
+      console.error('Error updating expiration status:', error);
     }
   };
 
   const handleAddChild = () => {
     const countdownParts = countdown.split(':');
     const countdownSeconds = parseInt(countdownParts[0], 10) * 3600 + parseInt(countdownParts[1], 10) * 60;
-    const expirationTime = new Date(Date.now() + countdownSeconds * 1000);
+    const newExpirationTime = new Date(Date.now() + countdownSeconds * 1000);
 
-    handleSendData({ imie, nazwisko, email, id, countdown: countdownSeconds, exitDate: expirationTime });
+    handleSendData({ imie, nazwisko, email, id, countdown: countdownSeconds, exitDate: newExpirationTime });
   };
 
   const handleTimeRangeChange = (e) => {
@@ -64,6 +63,18 @@ function UserForm() {
     setCountdown(selectedTimeRange);
     const selectedPrice = dataPrice.find(res => res.timeRange === selectedTimeRange)?.cena || '';
     setCena(selectedPrice);
+  };
+
+  const calculateOverdueTime = (exitDate) => {
+    const currentTime = Date.now();
+    const overdueTime = (currentTime - new Date(exitDate).getTime()) / 1000; // Ensure the division by 1000 for seconds
+    console.log(`Overdue time for exitDate ${exitDate}: ${overdueTime}`);
+    return overdueTime > 0 ? overdueTime : 0;
+  };
+
+  const handleStop = (userId, exitDate) => {
+    const overdueTime = calculateOverdueTime(exitDate);
+    updateExpirationStatus(userId, new Date().toISOString(), overdueTime);
   };
 
   return (
@@ -107,7 +118,24 @@ function UserForm() {
             <div className="email">{res.email}</div>
             <div className="id">{res.id}</div>
             <div className="cena">{res.cena}</div>
-            <div className="czas">{calculateTime(res.remainingTime, res.expirationTime)}</div>
+            <div className="czas">
+              {!res.exitDate ? (
+                <div>
+                  {`${Math.floor(res.remainingTime / 3600)}h ${Math.floor((res.remainingTime % 3600) / 60)}m ${Math.floor(res.remainingTime % 60)}s`} 
+                  <button onClick={() => handleStop(res.id, res.exitDate)}>STOP</button>
+                </div>
+              ) : (
+                res.remainingTime <= 0 ? (
+                  <>
+                    {!res.exitDate&&handleStop(res.id, res.exitDate)}
+                    {`Przekroczono czas o ${Math.floor(calculateOverdueTime(res.exitDate) / 3600)}h ${Math.floor((calculateOverdueTime(res.exitDate) % 3600) / 60)}m ${Math.floor(calculateOverdueTime(res.exitDate) % 60)}s`}
+                  </>
+                ) : (
+                  "0"
+                )
+              )}
+            </div>
+
             <div className="akcje">
               <button onClick={() => deleteUser(res.id)}>Usuń</button>
             </div>

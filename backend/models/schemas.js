@@ -9,15 +9,17 @@ const userSchema = new Schema({
     id: { type: String, required: true, unique: true },
     cena: { type: Number, required: true },
     entryDate: { type: Date, default: Date.now },
-    exitDate: { type: Date },  // Data wyjścia
-    countdown: { type: Number, required: true }  // countdown in seconds
-});
+    exitDate: { type: Date },
+    countdown: { type: Number, required: true },
+    elapsedTime: { type: Number, default: 0 }  // Elapsed time in seconds
+  });
+  
 
-userSchema.methods.updateExitDate = function() {
-    if (this.countdown > 0) {
-        this.exitDate = new Date(Date.now() + this.countdown * 1000);
-    }
-};
+// userSchema.methods.updateExitDate = function() {
+//     if (this.countdown > 0) {
+//         this.exitDate = new Date(Date.now() + this.countdown * 1000);
+//     }
+// };
 
   
 // Schemat dla administratorów
