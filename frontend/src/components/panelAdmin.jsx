@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { adminService } from '../services/adminService';
+import {getPrice} from '../services/getPrice';
 import "../style/adminStyle.css";
 
 const PanelAdmin = () => {
   const { cena, setCena, czas, setCzas, handleSetPrice, downloadCSV } = adminService();
+  const { dataPrice, handleGetPrice } = getPrice();
   const [inputTime, setInputTime] = useState(czas);
 
   useEffect(() => {
+    handleGetPrice();
     setInputTime(czas);
   }, [czas]);
 
@@ -63,6 +66,11 @@ const PanelAdmin = () => {
         <button onClick={handleSetPrice}>DODAJ</button>
         <button onClick={downloadCSV}>Pobierz CSV</button>
       </div>
+      {dataPrice.map((res)=>(
+        <div key={res.cena}>
+          {res.cena} -||- {res.timeRange}
+        </div>
+      ))}
     </div>
   );
 };
