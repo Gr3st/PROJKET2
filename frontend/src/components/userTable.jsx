@@ -23,10 +23,6 @@ function UserTable() {
     }
   };
 
-  // useEffect(() => {
-  //   handleGetPrice();
-  // }, [czas, adminCena]);
-
   useEffect(() => {
     handleGetData();
     const interval = setInterval(() => {
@@ -35,9 +31,9 @@ function UserTable() {
     return () => clearInterval(interval);
   }, [handleGetData]);
 
-  const updateExpirationStatus = async (userId, exitDate, elapsedTime) => {
+  const updateExpirationStatus = async (userId, exitDate, elapsedTime, additionalCost) => {
     try {
-      await axios.put(`https://crispy-xylophone-44q6rq6wwxjcjrjg-4000.app.github.dev/user/${userId}/expiration`, { exitDate, elapsedTime });
+      await axios.put(`https://crispy-xylophone-44q6rq6wwxjcjrjg-4000.app.github.dev/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
       handleGetData();
     } catch (error) {
       console.error('Error updating expiration status:', error);
@@ -47,13 +43,18 @@ function UserTable() {
   const calculateOverdueTime = (exitDate) => {
     const currentTime = Date.now();
     const overdueTime = (currentTime - new Date(exitDate).getTime()) / 1000; // Ensure the division by 1000 for seconds
-    console.log(`Overdue time for exitDate ${exitDate}: ${overdueTime}`);
     return overdueTime > 0 ? overdueTime : 0;
+  };
+
+  const calculateAdditionalCost = (overdueTime) => {
+    const overtimeMinutes = Math.ceil(overdueTime / 60);
+    return Math.floor(overtimeMinutes / 1); // 1 PLN for every 5 minutes
   };
 
   const handleStop = (userId, exitDate) => {
     const overdueTime = calculateOverdueTime(exitDate);
-    updateExpirationStatus(userId, new Date().toISOString(), overdueTime);
+    const additionalCost = calculateAdditionalCost(overdueTime);
+    updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
   };
 
   useEffect(() => {
@@ -88,7 +89,7 @@ function UserTable() {
           <div className="nazwisko">{res.nazwisko}</div>
           <div className="email">{res.email}</div>
           <div className="id">{res.id}</div>
-          <div className="cena">{res.cena}</div>
+          <div className="cena">{res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate))}</div>
           <div className="czas">
             {!res.exitDate ? (
               <div>
@@ -101,7 +102,7 @@ function UserTable() {
                   {`Przekroczono czas o ${Math.floor(calculateOverdueTime(res.exitDate) / 3600)}h ${Math.floor((calculateOverdueTime(res.exitDate) % 3600) / 60)}m ${Math.floor(calculateOverdueTime(res.exitDate) % 60)}s`}
                 </>
               ) : (
-                <>{`${Math.floor(calculateTimeDifference(res.entryDate,res.exitDate)  / 3600)}h ${Math.floor((calculateTimeDifference(res.entryDate,res.exitDate)  % 3600) / 60)}m ${Math.floor(calculateTimeDifference(res.entryDate,res.exitDate)  % 60)}s`}</>
+                <>{`${Math.floor(calculateTimeDifference(res.entryDate, res.exitDate)  / 3600)}h ${Math.floor((calculateTimeDifference(res.entryDate, res.exitDate)  % 3600) / 60)}m ${Math.floor(calculateTimeDifference(res.entryDate, res.exitDate)  % 60)}s`}</>
               )
             )}
           </div>
