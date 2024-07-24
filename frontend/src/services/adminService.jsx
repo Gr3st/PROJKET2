@@ -46,7 +46,8 @@ export function adminService() {
       formatCell(user.cena || ''),
       formatCell(new Date(user.entryDate).toLocaleDateString() || ''),
       formatCell(user.exitDate ? new Date(user.exitDate).toLocaleDateString() : ''),
-      formatCell(user.countdown || '')
+      formatCell(user.countdown || ''),
+      formatCell(user.elapsedTime || '')
     ]);
 
     const csvContent = [

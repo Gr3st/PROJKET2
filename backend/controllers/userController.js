@@ -30,7 +30,7 @@ exports.dodaj = async (req, res) => {
 // Update user expiration status
 exports.updateExpiration = async (req, res) => {
     const { id } = req.params;
-    const { exitDate } = req.body;
+    const { exitDate, elapsedTime } = req.body;
 
     try {
         const user = await Schemas.Users.findOne({ id });
@@ -40,6 +40,7 @@ exports.updateExpiration = async (req, res) => {
         }
 
         user.exitDate = exitDate;
+        user.elapsedTime = elapsedTime;
         await user.save();
 
         res.send('User expiration status updated successfully');
