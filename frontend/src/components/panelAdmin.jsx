@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { adminService } from '../services/adminService';
 import { getPrice } from '../services/getPrice';
 import "../style/adminStyle.css";
-import axios from 'axios';  // Make sure axios is imported
+import axios from 'axios';
 
 const PanelAdmin = () => {
   const { cena, setCena, czas, setCzas, handleSetPrice, downloadCSV } = adminService();
@@ -46,20 +46,54 @@ const PanelAdmin = () => {
 
   const updatePrice = async (cena, nowaCena) => {
     try {
-      await axios.put(`https://crispy-xylophone-44q6rq6wwxjcjrjg-4000.app.github.dev/price/update`, { cena, nowaCena});
-      handleGetPrice(); // Refresh the prices after update
+      await axios.put(`https://crispy-xylophone-44q6rq6wwxjcjrjg-4000.app.github.dev/price/update`, { cena, nowaCena });
+      handleGetPrice();
     } catch (error) {
       console.error('Error updating expiration status:', error);
     }
   };
 
+  const renderUpdateSection = (res) => {
+    if (updStatus && selectedPrice === res.cena) {
+      return (
+        <div className='update-column'>
+          <div className='price-update-form'>
+            <input
+              type="text"
+              value={cena}
+              onChange={(e) => setCena(e.target.value)}
+            />
+            <button onClick={() => {
+              updatePrice(selectedPrice, cena);
+              setUpdStatus(false);
+              setSelectedPrice(null);
+            }}>
+              Confirm
+            </button>
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className='update-column'>
+          <button className='update-button' onClick={() => {
+            setUpdStatus(true);
+            setSelectedPrice(res.cena);
+          }}>
+            Update
+          </button>
+        </div>
+      );
+    }
+  };
+
   return (
-    <div className='Panel-Container'>
+    <div className='admin-panel-container'>
       <h2>Panel Administracyjny</h2>
-      <div>
+      <div className='admin-panel-header'>
         <h3>Ustaw Limity Czasowe</h3>
       </div>
-      <div className='panel-inside'>
+      <div className='admin-panel-body'>
         <h3>Ustaw Czas</h3>
         <input
           type="text"
@@ -73,44 +107,23 @@ const PanelAdmin = () => {
           onChange={(e) => setCena(e.target.value)}
         />
       </div>
-      <div className="btn-admin">
+      <div className="admin-panel-buttons">
         <button onClick={handleSetPrice}>DODAJ</button>
         <button onClick={downloadCSV}>Pobierz CSV</button>
       </div>
-      <div className='tabela-container'>
-        <div className='Tabela-ceny'>
-          <div className='cena'>Cena</div>
-          <div className='czas'>Czas</div>
-          <div className='update'>Update</div>
+      <div className='price-table-container'>
+        <div className='price-table-header'>
+          <div className='price-column'>Cena</div>
+          <div className='time-column'>Czas</div>
+          <div className='update-column'>Update</div>
         </div>
         {dataPrice.map((res) => (
-          <div className='Tabela-ceny-under'>
-            <div className="Tabela-up" key={res.cena}>
-              <div className='cena'>{res.cena}</div>
-              <div className='czas'>{res.timeRange}</div>
-              <button className='update' onClick={() => {
-                setUpdStatus(true);
-                setSelectedPrice(res.cena);
-              }}>
-                Update
-              </button>
+          <div className='price-table-row' key={res.cena}>
+            <div className='price-table-data'>
+              <div className='price-column'>{res.cena}</div>
+              <div className='time-column'>{res.timeRange}</div>
+              {renderUpdateSection(res)}
             </div>
-            {updStatus && selectedPrice === res.cena && (
-              <div className='Tabela-down'>
-                <input 
-                  type="text" 
-                  value={cena} 
-                  onChange={(e) => setCena(e.target.value)} 
-                />
-                <button onClick={() => {
-                  updatePrice(selectedPrice, cena);
-                  setUpdStatus(false);
-                }}>
-                  Confirm
-                </button>
-              </div>
-           
-            )}
           </div>
         ))}
       </div>
