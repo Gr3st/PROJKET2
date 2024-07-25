@@ -1,20 +1,3 @@
-.App nav{  
-   width: 100%;
-   min-height: 50px;
-   height: auto;
-   border-bottom: 1px solid #333333;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   flex-direction: row;
-   margin-bottom: 10px;
-}
-.App nav a{
-    text-decoration: none;
-    margin: 10px;
-    font-weight: 600;
-    color: black;
-}
 .Panel-Container{
     width: 100%;
     flex-direction: column;
@@ -53,4 +36,49 @@ input{
     justify-content: center;
     align-items: center;
     padding: 20px;
+}
+
+.tabela-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.Tabela-ceny{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.Tabela-ceny-under{
+    width: 100%;
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+}
+
+.Tabela-up{
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.Tabela-ceny .cena, .Tabela-ceny .czas, .Tabela-ceny .update{
+    display: flex;
+    width: 33%;
+    font-weight: 600;
+    justify-content: center;
+    align-items: center;
+}
+.Tabela-ceny-under .cena, .Tabela-ceny-under .czas, .Tabela-ceny-under .update{
+    display: flex;
+    width: 33%;
+    justify-content: center;
+    align-items: center;
 }

@@ -32,3 +32,23 @@ exports.dataPrice = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
+
+exports.updatePrice = async (req, res) => {
+  const { cena, nowaCena } = req.body;
+
+  try {
+    const ceny = await Schemas.Ceny.findOne({ cena });
+
+    if (!ceny) {
+      return res.status(404).send('Price not found');
+    }
+
+    ceny.cena = nowaCena;
+    await ceny.save();
+
+    res.send('Price status updated successfully');
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};

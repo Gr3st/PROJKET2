@@ -1,0 +1,17 @@
+.App nav{  
+    width: 100%;
+    min-height: 50px;
+    height: auto;
+    border-bottom: 1px solid #333333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    margin-bottom: 10px;
+ }
+ .App nav a{
+     text-decoration: none;
+     margin: 10px;
+     font-weight: 600;
+     color: black;
+ }
