@@ -1,34 +1,82 @@
-.user-form{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    justify-content: center;
-    align-items: center;
-}
+/* userForm.css */
 
-.user-tabela{
+.user-form {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .user-form input {
+    display: block;
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-.user-row, .user-row-title{
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  .user-form select {
+    display: block;
     width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  .user-form button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .user-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .user-table {
+    margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table-header, .table-row {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-.imie, .nazwisko, .email, .id, .cena, .czas, .akcje{
-    width: 10%;
-    height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* border: 1px solid black; */
-}
-.user-row-title .imie, .user-row-title .nazwisko, .user-row-title .email, .user-row-title .id, .user-row-title .cena, 
-.user-row-title .czas,.user-row-title .akcje{
-   border-bottom: 1px solid #333333;
-}
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+  }
+  
+  .column-header, .table-cell {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .table-header {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  .table-row:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .table-cell button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    background-color: #dc3545;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .table-cell button:hover {
+    background-color: #c82333;
+  }
+  
