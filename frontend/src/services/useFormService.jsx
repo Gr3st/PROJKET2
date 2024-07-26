@@ -17,7 +17,7 @@ export function useFormService() {
   const handleSendData = async () => {
     try {
       console.log('Sending data:', postData);
-      const res = await axios.post('https://crispy-xylophone-44q6rq6wwxjcjrjg-4000.app.github.dev/user', postData);
+      const res = await axios.post('https://projket2.onrender.com/user', postData);
       console.log('Response:', res);
       setImie('');
       setNazwisko('');

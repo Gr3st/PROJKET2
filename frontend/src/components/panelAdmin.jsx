@@ -46,7 +46,7 @@ const PanelAdmin = () => {
 
   const updatePrice = async (cena, nowaCena) => {
     try {
-      await axios.put(`https://crispy-xylophone-44q6rq6wwxjcjrjg-4000.app.github.dev/price/update`, { cena, nowaCena });
+      await axios.put(`https://projket2.onrender.com/price/update`, { cena, nowaCena });
       handleGetPrice();
     } catch (error) {
       console.error('Error updating expiration status:', error);

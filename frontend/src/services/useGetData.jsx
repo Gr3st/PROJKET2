@@ -6,7 +6,7 @@ export function useGetData() {
 
   const handleGetData = async () => {
     try {
-      const res = await axios.get('https://crispy-xylophone-44q6rq6wwxjcjrjg-4000.app.github.dev/userData');
+      const res = await axios.get('https://projket2.onrender.com/userData');
       setData(res.data);
     } catch (err) {
       console.error('Error sending message:', err);

@@ -15,7 +15,7 @@ export function useAdminService() {
   const handleSetPrice = async () => {
     try {
       console.log('Sending data:', postData);
-      const res = await axios.post('https://crispy-xylophone-44q6rq6wwxjcjrjg-4000.app.github.dev/addPrice', postData);
+      const res = await axios.post('https://projket2.onrender.com/addPrice', postData);
       console.log('Response:', res);
       setCena('');
       setCzas('');

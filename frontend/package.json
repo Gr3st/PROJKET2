@@ -24,7 +24,7 @@
       "localhost",
       ".localhost"
     ],
-    "proxy": "https://crispy-xylophone-44q6rq6wwxjcjrjg-4000.app.github.dev/"
+    "proxy": "https://projket2.onrender.com/"
   },
   "eslintConfig": {
     "extends": [
