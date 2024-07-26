@@ -25,14 +25,14 @@ function UserTable() {
     return () => clearInterval(interval);
   }, [handleGetData]);
 
-  const updateExpirationStatus = async (userId, exitDate, elapsedTime, additionalCost) => {
+  const updateExpirationStatus = useCallback(async (userId, exitDate, elapsedTime, additionalCost) => {
     try {
       await axios.put(`https://crispy-xylophone-44q6rq6wwxjcjrjg-4000.app.github.dev/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
       handleGetData();
     } catch (error) {
       console.error('Error updating expiration status:', error);
     }
-  };
+  }, [handleGetData]);
 
   const calculateOverdueTime = (exitDate) => {
     const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
@@ -48,7 +48,7 @@ function UserTable() {
     const overdueTime = calculateOverdueTime(exitDate);
     const additionalCost = calculateAdditionalCost(overdueTime);
     updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
-  }, []);
+  }, [updateExpirationStatus]);
 
   useEffect(() => {
     data.forEach(res => {
