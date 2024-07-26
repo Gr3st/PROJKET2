@@ -1,17 +1,10 @@
-// userTable.js
-
 import '../style/userForm.css';
 import axios from 'axios';
-import { formService } from '../services/formService';
-import { adminService } from '../services/adminService';
-import { getData } from '../services/getData';
-import { getPrice } from '../services/getPrice';
+import { useGetData } from '../services/useGetData';
 import { useEffect, useState } from 'react';
 
 function UserTable() {
-  const { imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, cena, setCena, countdown, setCountdown, handleSendData } = formService();
-  const { data, handleGetData } = getData();
-  const { dataPrice, handleGetPrice } = getPrice();
+  const { data, handleGetData } = useGetData();
   const [currentTime, setCurrentTime] = useState(Date.now());
 
   const deleteUser = async (userId) => {
@@ -42,14 +35,13 @@ function UserTable() {
   };
 
   const calculateOverdueTime = (exitDate) => {
-    const currentTime = Date.now();
-    const overdueTime = (currentTime - new Date(exitDate).getTime()) / 1000;
+    const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
     return overdueTime > 0 ? overdueTime : 0;
   };
 
   const calculateAdditionalCost = (overdueTime) => {
     const overtimeMinutes = Math.ceil(overdueTime / 60);
-    return Math.floor(overtimeMinutes / 1);
+    return Math.floor(overtimeMinutes / 1); // Adjust this as needed for specific cost calculations
   };
 
   const handleStop = (userId, exitDate) => {

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-export function formService() {
+export function useFormService() {
   const [imie, setImie] = useState('');
   const [nazwisko, setNazwisko] = useState('');
   const [email, setEmail] = useState('');

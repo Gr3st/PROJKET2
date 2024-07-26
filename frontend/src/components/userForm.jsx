@@ -1,25 +1,21 @@
-// userForm.js
-
 import '../style/userForm.css';
-import axios from 'axios';
-import { formService } from '../services/formService';
-import { adminService } from '../services/adminService';
-import { getData } from '../services/getData';
-import { getPrice } from '../services/getPrice';
-import { useEffect, useState } from 'react';
+import { useFormService } from '../services/useFormService';
+import { useGetPrice } from '../services/useGetPrice';
+import { useAdminService } from '../services/useAdminService';
+import { useEffect } from 'react';
 import UserTable from './userTable';
 
 function UserForm() {
-  const { imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, cena, setCena, countdown, setCountdown, handleSendData } = formService();
-  const { dataPrice, handleGetPrice } = getPrice();
-  const { cena: adminCena, czas } = adminService();
+  const { imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, cena, setCena, countdown, setCountdown, handleSendData } = useFormService();
+  const { dataPrice, handleGetPrice } = useGetPrice();
+  const { cena: adminCena, czas } = useAdminService();
 
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
       handleSendData();
     }
   };
-  
+
   useEffect(() => {
     handleGetPrice();
   }, [czas, adminCena]);
@@ -27,10 +23,9 @@ function UserForm() {
   const handleTimeRangeChange = (e) => {
     const selectedTimeRange = e.target.value;
     setCountdown(selectedTimeRange);
-    const selectedPrice = dataPrice.find(res => res.timeRange === selectedTimeRange)?.cena || '';
+    const selectedPrice = dataPrice.find(res => res.czas === selectedTimeRange)?.cena || '';
     setCena(selectedPrice);
   };
-
 
   const handleAddChild = () => {
     const countdownParts = countdown.split(':');
@@ -40,10 +35,9 @@ function UserForm() {
     handleSendData({ imie, nazwisko, email, id, countdown: countdownSeconds, exitDate: newExpirationTime });
   };
 
-
   return (
     <div className="user-form">
-      <input type="text" placeholder="Imie" value={imie} onChange={(e) => setImie(e.target.value)} onKeyDown={handleKeyPress} />
+      <input type="text" placeholder="Imię" value={imie} onChange={(e) => setImie(e.target.value)} onKeyDown={handleKeyPress} />
       <input type="text" placeholder="Nazwisko" value={nazwisko} onChange={(e) => setNazwisko(e.target.value)} onKeyDown={handleKeyPress} />
       <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={handleKeyPress} />
       <input type="text" placeholder="ID" value={id} onChange={(e) => setId(e.target.value)} onKeyDown={handleKeyPress} />
@@ -53,20 +47,19 @@ function UserForm() {
         <select onChange={handleTimeRangeChange}>
           <option value="-">-</option>
           {dataPrice.map(res => (
-            <option key={res.timeRange} value={res.timeRange}>{res.timeRange}</option>
+            <option key={res.czas} value={res.czas}>{res.czas}</option>
           ))}
         </select>
       </div>
 
       <div>
         Cena: 
-        {cena}{cena && "zł"}
+        {cena}{cena && " zł"}
       </div>
 
       <button onClick={handleAddChild}>Dodaj Dziecko</button>
 
       <UserTable />
-    
     </div>
   );
 }

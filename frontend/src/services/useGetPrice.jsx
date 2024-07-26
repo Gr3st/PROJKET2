@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-export function getPrice() {
+export function useGetPrice() {
   const [dataPrice, setDataPrice] = useState([]);
 
   const handleGetPrice = async () => {
-    try { 
+    try {
       const res = await axios.get('https://crispy-xylophone-44q6rq6wwxjcjrjg-4000.app.github.dev/getPrice');
       setDataPrice(res.data);
       console.log(res.data);
@@ -14,5 +14,5 @@ export function getPrice() {
     }
   };
 
-  return {dataPrice, setDataPrice, handleGetPrice};
+  return { dataPrice, setDataPrice, handleGetPrice };
 }

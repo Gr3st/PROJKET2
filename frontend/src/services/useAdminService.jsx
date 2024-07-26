@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { getData } from './getData';
+import { useGetData } from './useGetData';
 
-export function adminService() {
+export function useAdminService() {
   const [czas, setCzas] = useState('');
   const [cena, setCena] = useState('');
   const [postData, setPostData] = useState({});
-  const { data, handleGetData } = getData();
+  const { data, handleGetData } = useGetData();
 
   useEffect(() => {
     setPostData({ czas, cena });
