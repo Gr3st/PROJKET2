@@ -1,7 +1,7 @@
 import '../style/userForm.css';
 import axios from 'axios';
 import { useGetData } from '../services/useGetData';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 function UserTable() {
   const { data, handleGetData } = useGetData();
@@ -44,11 +44,11 @@ function UserTable() {
     return Math.floor(overtimeMinutes / 1); // Adjust this as needed for specific cost calculations
   };
 
-  const handleStop = (userId, exitDate) => {
+  const handleStop = useCallback((userId, exitDate) => {
     const overdueTime = calculateOverdueTime(exitDate);
     const additionalCost = calculateAdditionalCost(overdueTime);
     updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
-  };
+  }, []);
 
   useEffect(() => {
     data.forEach(res => {
