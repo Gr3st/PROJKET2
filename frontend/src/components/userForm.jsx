@@ -18,7 +18,7 @@ function UserForm() {
 
   useEffect(() => {
     handleGetPrice();
-  }, [czas, adminCena]);
+  }, [czas, adminCena, handleGetPrice]);
 
   const handleTimeRangeChange = (e) => {
     const selectedTimeRange = e.target.value;

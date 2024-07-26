@@ -56,7 +56,7 @@ function UserTable() {
         handleStop(res.id, res.exitDate);
       }
     });
-  }, [data, currentTime]);
+  }, [data, currentTime, handleStop]);
 
   const calculateTimeDifference = (entryDate, exitDate) => {
     const entryTime = new Date(entryDate).getTime();
