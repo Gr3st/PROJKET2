@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAdminService } from '../services/useAdminService';
 import { useGetPrice } from '../services/useGetPrice';
-import "../style/adminStyle.css";
+import "../style/App.css";
 import axios from 'axios';
 
 const PanelAdmin = () => {
