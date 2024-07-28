@@ -1,7 +1,7 @@
 import './style/App.css';
 import UserForm from './components/userForm';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
-import PanelAdmin from './components/panelAdmin';
+import PanelAdmin from './components/PanelAdmin';
 
 function App() {
   return (

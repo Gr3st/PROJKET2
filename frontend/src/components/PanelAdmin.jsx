@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAdminService } from '../services/useAdminService';
 import { useGetPrice } from '../services/useGetPrice';
-import "../style/App.css";
+import "../style/Adm.css";
 import axios from 'axios';
 
 const PanelAdmin = () => {
@@ -14,7 +14,7 @@ const PanelAdmin = () => {
   useEffect(() => {
     handleGetPrice();
     setInputTime(czas);
-  }, [czas, handleGetPrice]);
+  }, [czas]);
 
   const handleTimeChange = (e) => {
     const value = e.target.value;
@@ -88,41 +88,45 @@ const PanelAdmin = () => {
   };
 
   return (
-    <div className='admin-panel'>
-      <div className='admin-form'>
-        <h2 className='admin-heading'>Add Price</h2>
-        <label className='admin-label'>
-          Time:
-          <input className='admin-input' type="text" value={inputTime} onChange={handleTimeChange} />
-        </label>
-        <label className='admin-label'>
-          Price:
-          <input className='admin-input' type="text" value={cena} onChange={(e) => setCena(e.target.value)} />
-        </label>
-        <button className='admin-button' onClick={handleSetPrice}>Add</button>
+    <div className='admin-panel-container'>
+      <h2>Panel Administracyjny</h2>
+      <div className='admin-panel-header'>
+        <h3>Ustaw Limity Czasowe</h3>
       </div>
-      <div className='admin-table'>
-        <h2 className='admin-heading'>Prices</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Time</th>
-              <th>Price</th>
-              <th>Update</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dataPrice.map((res, index) => (
-              <tr key={index}>
-                <td>{res.czas}</td>
-                <td>{res.cena}</td>
-                <td>{renderUpdateSection(res)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className='admin-panel-body'>
+        <h3>Ustaw Czas</h3>
+        <input
+          type="text"
+          value={inputTime}
+          onChange={handleTimeChange}
+          placeholder="HH:MM"
+        />
+        <h3>Ustaw Ceny</h3>
+        <input
+          type="text"
+          onChange={(e) => setCena(e.target.value)}
+        />
       </div>
-      <button className='download-button' onClick={downloadCSV}>Download CSV</button>
+      <div className="admin-panel-buttons">
+        <button onClick={handleSetPrice}>DODAJ</button>
+        <button onClick={downloadCSV}>Pobierz CSV</button>
+      </div>
+      <div className='price-table-container'>
+        <div className='price-table-header'>
+          <div className='price-column'>Cena</div>
+          <div className='time-column'>Czas</div>
+          <div className='update-column'>Update</div>
+        </div>
+        {dataPrice.map((res) => (
+          <div className='price-table-row' key={res.cena}>
+            <div className='price-table-data'>
+              <div className='price-column'>{res.cena}</div>
+              <div className='time-column'>{res.timeRange}</div>
+              {renderUpdateSection(res)}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
