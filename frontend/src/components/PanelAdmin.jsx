@@ -14,7 +14,7 @@ const PanelAdmin = () => {
   useEffect(() => {
     handleGetPrice();
     setInputTime(czas);
-  }, [czas]);
+  }, [czas, handleGetPrice]);
 
   const handleTimeChange = (e) => {
     const value = e.target.value;
