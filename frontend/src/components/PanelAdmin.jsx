@@ -116,6 +116,7 @@ const PanelAdmin = () => {
           <div className='price-column'>Cena</div>
           <div className='time-column'>Czas</div>
           <div className='update-column'>Update</div>
+          <div className='update-column'>Delete</div>
         </div>
         {dataPrice.map((res) => (
           <div className='price-table-row' key={res.cena}>
@@ -123,6 +124,7 @@ const PanelAdmin = () => {
               <div className='price-column'>{res.cena}</div>
               <div className='time-column'>{res.timeRange}</div>
               {renderUpdateSection(res)}
+              <div className="update-button">Delete</div>
             </div>
           </div>
         ))}
