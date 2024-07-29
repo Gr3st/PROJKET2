@@ -6,7 +6,7 @@ export function useGetPrice() {
 
   const handleGetPrice = async () => {
     try {
-      const res = await axios.get('https://projket2.onrender.com/getPrice');
+      const res = await axios.get('https://laughing-space-lamp-x6rx4rxvw4pcxw4-4000.app.github.dev/getPrice');
       setDataPrice(res.data);
       console.log(res.data);
     } catch (err) {

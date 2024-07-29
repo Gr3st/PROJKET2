@@ -9,7 +9,7 @@ function UserTable() {
 
   const deleteUser = async (userId) => {
     try {
-      const response = await axios.delete(`https://projket2.onrender.com/user/${userId}`);
+      const response = await axios.delete(`https://laughing-space-lamp-x6rx4rxvw4pcxw4-4000.app.github.dev/user/${userId}`);
       console.log('User deleted:', response.data);
       handleGetData();
     } catch (error) {
@@ -27,7 +27,7 @@ function UserTable() {
 
   const updateExpirationStatus = useCallback(async (userId, exitDate, elapsedTime, additionalCost) => {
     try {
-      await axios.put(`https://projket2.onrender.com/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
+      await axios.put(`https://laughing-space-lamp-x6rx4rxvw4pcxw4-4000.app.github.dev/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
       handleGetData();
     } catch (error) {
       console.error('Error updating expiration status:', error);
