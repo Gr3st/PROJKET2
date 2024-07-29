@@ -83,11 +83,17 @@ h2{
   font-weight: 600;
 }
 
-.price-column, .time-column, .update-column, .delete-column {
+.price-column, .time-column, .update-column {
   width: 25%;
   text-align: center;
 }
-
+.delete-column{
+  width: 25%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .update-button {
   padding: 5px 10px;
   border: none;
