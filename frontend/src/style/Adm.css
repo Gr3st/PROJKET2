@@ -1,4 +1,3 @@
-
 .admin-panel-container {
   width: 100%;
   display: flex;
@@ -10,9 +9,11 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-h2{
-    text-align: center;
+
+h2 {
+  text-align: center;
 }
+
 .admin-panel-header, .admin-panel-body {
   width: 100%;
   text-align: center;
@@ -72,15 +73,17 @@ h2{
   padding: 10px;
   border-bottom: 1px solid #ccc;
 }
-.price-table-data {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-  }
+
 .price-table-header {
   background-color: #f1f1f1;
   font-weight: 600;
+}
+
+.price-table-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .price-column, .time-column, .update-column, .delete-column {
@@ -88,28 +91,28 @@ h2{
   text-align: center;
 }
 
+.update-button, .delete-button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
 .update-button {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
   background-color: #007bff;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
 }
-.delete-button{
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #dc3545;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+
 .update-button:hover {
   background-color: #0056b3;
 }
-.delete-button:hover{
+
+.delete-button {
+  background-color: #dc3545;
+}
+
+.delete-button:hover {
   background-color: #c82333;
 }
 

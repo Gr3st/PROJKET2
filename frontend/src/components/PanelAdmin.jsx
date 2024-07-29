@@ -124,7 +124,9 @@ const PanelAdmin = () => {
               <div className='price-column'>{res.cena}</div>
               <div className='time-column'>{res.timeRange}</div>
               {renderUpdateSection(res)}
-              <div className="delete-button">Delete</div>
+              <div className='delete-column'>
+                <div className="delete-button">Delete</div>
+              </div>
             </div>
           </div>
         ))}
