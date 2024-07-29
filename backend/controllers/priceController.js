@@ -52,3 +52,20 @@ exports.updatePrice = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.usun = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+      const result = await Schemas.Ceny.deleteOne({ id });
+
+      if (result.deletedCount === 0) {
+          return res.status(404).send('Price not found');
+      }
+
+      res.send('Price deleted successfully');
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Internal Server Error');
+  }
+};

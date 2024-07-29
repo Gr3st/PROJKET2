@@ -44,6 +44,16 @@ const PanelAdmin = () => {
     return [hours, minutes];
   };
 
+  const deleteTimeRange = async (timeRange) => {
+    try {
+      const response = await axios.delete(`https://projket2.onrender.com/price/${timeRange}`);
+      console.log('Time range deleted:', response.data);
+      handleGetPrice();
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+
   const updatePrice = async (cena, nowaCena) => {
     try {
       await axios.put(`https://projket2.onrender.com/price/update`, { cena, nowaCena });
@@ -125,7 +135,7 @@ const PanelAdmin = () => {
               <div className='time-column'>{res.timeRange}</div>
               {renderUpdateSection(res)}
               <div className='delete-column'>
-                <div className="delete-button">Delete</div>
+                <div className="delete-button" onClick={deleteTimeRange(res.timeRange)}>Delete</div>
               </div>
             </div>
           </div>
