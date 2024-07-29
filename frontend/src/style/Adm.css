@@ -67,7 +67,7 @@ h2{
 .price-table-header, .price-table-row {
   width: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   padding: 10px;
   border-bottom: 1px solid #ccc;
