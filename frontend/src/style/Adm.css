@@ -83,8 +83,8 @@ h2{
   font-weight: 600;
 }
 
-.price-column, .time-column, .update-column {
-  width: 30%;
+.price-column, .time-column, .update-column, .delete-column {
+  width: 25%;
   text-align: center;
 }
 
@@ -97,7 +97,15 @@ h2{
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-
+.delete-button{
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 .update-button:hover {
   background-color: #0056b3;
 }
