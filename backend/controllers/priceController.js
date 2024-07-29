@@ -54,10 +54,10 @@ exports.updatePrice = async (req, res) => {
 };
 
 exports.usun = async (req, res) => {
-  const { id } = req.params;
+  const { timeRange } = req.params;
 
   try {
-      const result = await Schemas.Ceny.deleteOne({ id });
+      const result = await Schemas.Ceny.deleteOne({ timeRange });
 
       if (result.deletedCount === 0) {
           return res.status(404).send('Price not found');
