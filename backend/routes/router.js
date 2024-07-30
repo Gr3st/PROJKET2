@@ -4,7 +4,7 @@ const userController = require('../controllers/userController');
 const priceController = require('../controllers/priceController');
 
 router.delete('/user/:id', userController.usun);
-router.delete('/price/:id', priceController.usunPrice);
+router.delete('/price/:timeRange', priceController.usunPrice);  // Correct endpoint for timeRange
 router.post('/user', userController.dodaj);
 router.get('/userData', userController.data);
 router.put('/user/:id/expiration', userController.updateExpiration); // New route for updating expiration

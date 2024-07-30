@@ -46,11 +46,12 @@ const PanelAdmin = () => {
 
   const deleteTimeRange = async (timeRange) => {
     try {
+      // Correct the endpoint URL if necessary
       const response = await axios.delete(`https://projket2.onrender.com/price/${timeRange}`);
       console.log('Time range deleted:', response.data);
       handleGetPrice();
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error('Error deleting time range:', error);
     }
   };
 
