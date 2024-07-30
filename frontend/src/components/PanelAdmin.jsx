@@ -135,7 +135,7 @@ const PanelAdmin = () => {
               <div className='time-column'>{res.timeRange}</div>
               {renderUpdateSection(res)}
               <div className='delete-column'>
-                <div className="delete-button" onClick={deleteTimeRange(res.timeRange)}>Delete</div>
+                <div className="delete-button" onClick={() => deleteTimeRange(res.timeRange)}>Delete</div>
               </div>
             </div>
           </div>

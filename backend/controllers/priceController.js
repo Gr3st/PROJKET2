@@ -53,7 +53,7 @@ exports.updatePrice = async (req, res) => {
   }
 };
 
-exports.usun = async (req, res) => {
+exports.usunPrice = async (req, res) => {
   const { timeRange } = req.params;
 
   try {
