@@ -43,11 +43,11 @@ export function useAdminService() {
       formatCell(user.nazwisko || ''),
       formatCell(user.email || ''),
       formatCell(user.id || ''),
-      formatCell(user.cena+"zł" || ''),
-      formatCell(new Date(user.entryDate).toLocaleDateString() || ''),
+      formatCell(user.cena ? `${user.cena}zł` : ''),
+      formatCell(user.entryDate ? new Date(user.entryDate).toLocaleDateString() : ''),
       formatCell(user.exitDate ? new Date(user.exitDate).toLocaleDateString() : ''),
       formatCell(user.countdown || ''),
-      formatCell((user.entryDate.getTime() - user.exitDate.getTime())/1000)
+      formatCell(user.entryDate && user.exitDate ? (new Date(user.entryDate).getTime() - new Date(user.exitDate).getTime()) / 1000 : '')
     ]);
 
     const csvContent = [
@@ -59,9 +59,14 @@ export function useAdminService() {
   };
 
   const downloadCSV = async () => {
-    await handleGetData(); // Pobiera dane przed generowaniem CSV
+    await handleGetData(); // Fetch data before generating CSV
+    if (!data || data.length === 0) {
+      console.error('No data available to generate CSV');
+      return;
+    }
+    
     const csv = generateCSV(data);
-    if (!csv) return; // Jeśli nie ma danych do wygenerowania CSV
+    if (!csv) return; // If no data to generate CSV
 
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
