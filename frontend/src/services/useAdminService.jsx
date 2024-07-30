@@ -47,7 +47,7 @@ export function useAdminService() {
       formatCell(user.entryDate ? new Date(user.entryDate).toLocaleDateString() : ''),
       formatCell(user.exitDate ? new Date(user.exitDate).toLocaleDateString() : ''),
       formatCell(user.countdown || ''),
-      formatCell(user.entryDate && user.exitDate ? (new Date(user.entryDate).getTime() - new Date(user.exitDate).getTime()) / 1000 : '')
+      formatCell(user.entryDate && user.exitDate ? ((new Date(user.exitDate).getTime() - new Date(user.entryDate).getTime()) / 1000)%60 : '')
     ]);
 
     const csvContent = [
