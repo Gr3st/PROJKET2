@@ -37,17 +37,17 @@ export function useAdminService() {
       return '';
     }
 
-    const header = ['Imię', 'Nazwisko', 'Email', 'ID', 'Cena', 'Data Wejścia', 'Data Wyjścia', 'Odliczanie'];
+    const header = ['Imie', 'Nazwisko', 'Email', 'ID', 'Cena', 'Data Wejscia', 'Data Wyjscia', 'Odliczanie', 'realny-czas'];
     const rows = data.map(user => [
       formatCell(user.imie || ''),
       formatCell(user.nazwisko || ''),
       formatCell(user.email || ''),
       formatCell(user.id || ''),
-      formatCell(user.cena || ''),
+      formatCell(user.cena+"zł" || ''),
       formatCell(new Date(user.entryDate).toLocaleDateString() || ''),
       formatCell(user.exitDate ? new Date(user.exitDate).toLocaleDateString() : ''),
       formatCell(user.countdown || ''),
-      formatCell(user.elapsedTime || '')
+      formatCell((user.entryDate.getTime() - user.exitDate.getTime())/1000)
     ]);
 
     const csvContent = [
