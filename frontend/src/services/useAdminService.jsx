@@ -37,7 +37,7 @@ export function useAdminService() {
       return '';
     }
 
-    const header = ['Imie', 'Nazwisko', 'Email', 'ID', 'Cena', 'Data Wejscia', 'Data Wyjscia', 'Odliczanie', 'realny-czas'];
+    const header = ['Imie', 'Nazwisko', 'Email', 'ID', 'Cena', 'Data Wejscia', 'Data Wyjscia', 'Odliczanie', 'Calkowity Czas'];
     const rows = data.map(user => [
       formatCell(user.imie || ''),
       formatCell(user.nazwisko || ''),
