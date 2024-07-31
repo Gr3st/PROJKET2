@@ -18,10 +18,9 @@ const PanelAdmin = () => {
 
   const handleTimeChange = (e) => {
     const value = e.target.value;
-    const [hours, minutes] = parseTime(value);
+    const formattedTime = formatTime(value);
 
-    if (hours >= 0 && minutes >= 0 && minutes < 60) {
-      const formattedTime = `${hours}:${minutes.toString().padStart(2, '0')}`;
+    if (formattedTime) {
       setCzas(formattedTime);
       setInputTime(formattedTime);
     } else {
@@ -29,7 +28,7 @@ const PanelAdmin = () => {
     }
   };
 
-  const parseTime = (time) => {
+  const formatTime = (time) => {
     const timeParts = time.split(':');
     let hours = 0;
     let minutes = 0;
@@ -41,7 +40,13 @@ const PanelAdmin = () => {
       minutes = parseInt(timeParts[1], 10);
     }
 
-    return [hours, minutes];
+    if (hours >= 0 && minutes >= 0 && minutes < 60) {
+      const formattedHours = hours < 10 ? `0${hours}` : hours;
+      const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+      return `${formattedHours}:${formattedMinutes}`;
+    }
+
+    return null;
   };
 
   const deleteTimeRange = async (timeRange) => {

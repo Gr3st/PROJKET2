@@ -2,11 +2,11 @@ const Schemas = require('../models/schemas');
 
 // Predefined time ranges and prices
 const predefinedPrices = [
-  { timeRange: '1 min', cena: 0.5 },
-  { timeRange: '5 min', cena: 1 },
-  { timeRange: '1 godz', cena: 20 },
-  { timeRange: '2 godz', cena: 35 },
-  { timeRange: 'cały dzień', cena: 200 }
+  { timeRange: '00:01', cena: 0.5 },
+  { timeRange: '00:05', cena: 1 },
+  { timeRange: '01:00', cena: 20 },
+  { timeRange: '02:00', cena: 35 },
+  { timeRange: '24:00', cena: 200 }
 ];
 
 exports.dodajCene = async (req, res) => {
@@ -23,7 +23,8 @@ exports.dodajCene = async (req, res) => {
       return res.status(400).send('Cena already exists');
     }
 
-    const newCena = new Schemas.Ceny({ timeRange: czas, cena });
+    const formattedCzas = formatTime(czas);
+    const newCena = new Schemas.Ceny({ timeRange: formattedCzas, cena });
     await newCena.save();
     res.send('Price added successfully');
   } catch (error) {
@@ -92,6 +93,21 @@ const initializePrices = async () => {
   } catch (error) {
     console.error('Error initializing prices:', error);
   }
+};
+
+const formatTime = (time) => {
+  const timeParts = time.split(':');
+  let hours = parseInt(timeParts[0], 10);
+  let minutes = parseInt(timeParts[1], 10);
+
+  if (hours < 10) {
+    hours = `0${hours}`;
+  }
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
+  }
+
+  return `${hours}:${minutes}`;
 };
 
 initializePrices();
