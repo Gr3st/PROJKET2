@@ -1,7 +1,7 @@
 import '../style/userForm.css';
 import axios from 'axios';
 import { useGetData } from '../services/useGetData';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useFormService } from '../services/useFormService';
 
 function UserTable() {
