@@ -27,9 +27,9 @@ function UserForm() {
     setCena(selectedPrice);
   };
 
-  const handleIdChange = (e) => {
-    const newId = e.target.value;
-    setId(newId);
+  const handleIdChange = (newId) => {
+    // const newId = e.target.value;
+    // setId(newId);
     if (newId) {
       const confirmStop = window.confirm("Czy jesteś pewien, że chcesz zatrzymać czas dla tego użytkownika?");
       if (confirmStop) {
@@ -51,7 +51,7 @@ function UserForm() {
       <input type="text" placeholder="Imię" value={imie} onChange={(e) => setImie(e.target.value)} onKeyDown={handleKeyPress} />
       <input type="text" placeholder="Nazwisko" value={nazwisko} onChange={(e) => setNazwisko(e.target.value)} onKeyDown={handleKeyPress} />
       <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={handleKeyPress} />
-      <input type="text" placeholder="ID" value={id} onChange={handleIdChange} onKeyDown={handleKeyPress} />
+      <input type="text" placeholder="ID" value={id} onChange={(e)=>{setId(e.target.value);handleIdChange(e.target.value)}} onKeyDown={handleKeyPress} />
 
       <div>
         Czas: 
