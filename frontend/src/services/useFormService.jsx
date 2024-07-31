@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 export function useFormService() {
   const [imie, setImie] = useState('');
@@ -30,7 +30,31 @@ export function useFormService() {
     }
   };
 
+  const calculateOverdueTime = (exitDate) => {
+    const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
+    return overdueTime > 0 ? overdueTime : 0;
+  };
+
+  const calculateAdditionalCost = (overdueTime) => {
+    const overtimeMinutes = Math.ceil(overdueTime / 60);
+    return Math.floor(overtimeMinutes / 1); // Adjust this as needed for specific cost calculations
+  };
+
+  const updateExpirationStatus = useCallback(async (userId, exitDate, elapsedTime, additionalCost) => {
+    try {
+      await axios.put(`https://projket2.onrender.com/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
+    } catch (error) {
+      console.error('Error updating expiration status:', error);
+    }
+  }, []);
+
+  const handleStopCountdown = useCallback((userId, exitDate) => {
+    const overdueTime = calculateOverdueTime(exitDate);
+    const additionalCost = calculateAdditionalCost(overdueTime);
+    updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
+  }, [updateExpirationStatus]);
+
   return {
-    imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, cena, setCena, countdown, setCountdown, handleSendData,
+    imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, cena, setCena, countdown, setCountdown, handleSendData, handleStopCountdown
   };
 }

@@ -25,15 +25,6 @@ function UserTable() {
     return () => clearInterval(interval);
   }, [handleGetData]);
 
-  const updateExpirationStatus = useCallback(async (userId, exitDate, elapsedTime, additionalCost) => {
-    try {
-      await axios.put(`https://projket2.onrender.com/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
-      handleGetData();
-    } catch (error) {
-      console.error('Error updating expiration status:', error);
-    }
-  }, [handleGetData]);
-
   const calculateOverdueTime = (exitDate) => {
     const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
     return overdueTime > 0 ? overdueTime : 0;
@@ -43,20 +34,6 @@ function UserTable() {
     const overtimeMinutes = Math.ceil(overdueTime / 60);
     return Math.floor(overtimeMinutes / 1); // Adjust this as needed for specific cost calculations
   };
-
-  const handleStop = useCallback((userId, exitDate) => {
-    const overdueTime = calculateOverdueTime(exitDate);
-    const additionalCost = calculateAdditionalCost(overdueTime);
-    updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
-  }, [updateExpirationStatus]);
-
-  useEffect(() => {
-    data.forEach(res => {
-      if (!res.exitDate && res.remainingTime <= 0) {
-        handleStop(res.id, res.exitDate);
-      }
-    });
-  }, [data, currentTime, handleStop]);
 
   const calculateTimeDifference = (entryDate, exitDate) => {
     const entryTime = new Date(entryDate).getTime();

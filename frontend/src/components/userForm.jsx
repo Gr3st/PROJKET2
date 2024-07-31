@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import UserTable from './userTable';
 
 function UserForm() {
-  const { imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, cena, setCena, countdown, setCountdown, handleSendData } = useFormService();
+  const { imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, cena, setCena, countdown, setCountdown, handleSendData, handleStopCountdown } = useFormService();
   const { dataPrice, handleGetPrice } = useGetPrice();
   const { cena: adminCena, czas } = useAdminService();
 
@@ -28,8 +28,6 @@ function UserForm() {
   };
 
   const handleIdChange = (newId) => {
-    // const newId = e.target.value;
-    // setId(newId);
     if (newId) {
       const confirmStop = window.confirm("Czy jesteś pewien, że chcesz zatrzymać czas dla tego użytkownika?");
       if (confirmStop) {
@@ -51,7 +49,7 @@ function UserForm() {
       <input type="text" placeholder="Imię" value={imie} onChange={(e) => setImie(e.target.value)} onKeyDown={handleKeyPress} />
       <input type="text" placeholder="Nazwisko" value={nazwisko} onChange={(e) => setNazwisko(e.target.value)} onKeyDown={handleKeyPress} />
       <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={handleKeyPress} />
-      <input type="text" placeholder="ID" value={id} onChange={(e) => setId(e.target.value)} onKeyDown={handleKeyPress} />
+      <input type="text" placeholder="ID" value={id} onChange={(e) => { setId(e.target.value); handleIdChange(e.target.value); }} onKeyDown={handleKeyPress} />
 
       <div>
         Czas: 
