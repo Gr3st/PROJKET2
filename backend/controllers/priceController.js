@@ -2,14 +2,25 @@ const Schemas = require('../models/schemas');
 
 exports.dodajCene = async (req, res) => {
   const { czas, cena } = req.body;
+  const predefinedPrices = [
+    { timeRange: '00:01', cena: 0.5 },
+    { timeRange: '00:05', cena: 1 },
+    { timeRange: '01:00', cena: 20 },
+    { timeRange: '02:00', cena: 35 },
+    { timeRange: '24:00', cena: 200 }
+  ];
 
   if (!czas || !cena) {
     return res.status(400).send('All fields are required');
   }
-
+  
   try {
     const existingCeny = await Schemas.Ceny.findOne({ cena });
-
+    const existingPrice = await Schemas.Ceny.findOne({ timeRange: price.timeRange });
+    if (!existingPrice) {
+      const newPrice = new Schemas.Ceny(price);
+      await newPrice.save();
+    }
     if (existingCeny) {
       return res.status(400).send('Cena already exists');
     }
@@ -69,21 +80,21 @@ exports.usunPrice = async (req, res) => {
       res.status(500).send('Internal Server Error');
   }
 };
-async function initializePrices() {
-  const predefinedPrices = [
-    { timeRange: '00:01', cena: 0.5 },
-    { timeRange: '00:05', cena: 1 },
-    { timeRange: '01:00', cena: 20 },
-    { timeRange: '02:00', cena: 35 },
-    { timeRange: '24:00', cena: 200 }
-  ];
+// async function initializePrices() {
+//   const predefinedPrices = [
+//     { timeRange: '00:01', cena: 0.5 },
+//     { timeRange: '00:05', cena: 1 },
+//     { timeRange: '01:00', cena: 20 },
+//     { timeRange: '02:00', cena: 35 },
+//     { timeRange: '24:00', cena: 200 }
+//   ];
 
-  for (const price of predefinedPrices) {
-    const existingPrice = await Schemas.Ceny.findOne({ timeRange: price.timeRange });
-    if (!existingPrice) {
-      const newPrice = new Schemas.Ceny(price);
-      await newPrice.save();
-    }
-  }
-}
+//   for (const price of predefinedPrices) {
+//     const existingPrice = await Schemas.Ceny.findOne({ timeRange: price.timeRange });
+//     if (!existingPrice) {
+//       const newPrice = new Schemas.Ceny(price);
+//       await newPrice.save();
+//     }
+//   }
+// }
 

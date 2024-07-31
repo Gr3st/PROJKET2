@@ -21,21 +21,21 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use('/', router);
 
-// mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-//     .then(() => console.log('DB Connected!'))
-//     .catch(err => console.log(err));
-
 mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-.then(() => {
-    console.log('Connected to MongoDB');
+    .then(() => console.log('DB Connected!'))
+    .catch(err => console.log(err));
 
-    // Wywołaj funkcję inicjalizacji cen po połączeniu z bazą danych
-    initializePrices().then(() => {
-    console.log('Prices initialized');
-    }).catch((error) => {
-    console.error('Error initializing prices:', error);
-    });
-})
+// mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+// .then(() => {
+//     console.log('Connected to MongoDB');
+
+//     // Wywołaj funkcję inicjalizacji cen po połączeniu z bazą danych
+//     initializePrices().then(() => {
+//     console.log('Prices initialized');
+//     }).catch((error) => {
+//     console.error('Error initializing prices:', error);
+//     });
+// })
 .catch(error => {
     console.error('Error connecting to MongoDB:', error);
 });
