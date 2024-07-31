@@ -11,15 +11,12 @@ const PanelAdmin = () => {
   const [updStatus, setUpdStatus] = useState(false);
   const [selectedPrice, setSelectedPrice] = useState(null);
 
-  const penaltyPrices = [
-    { time: "1 min", price: "0.5zł" },
-    { time: "5 min", price: "1zł" },
-  ];
-
-  const declaredTimes = [
-    { time: "1 godz", price: "20zł" },
-    { time: "2 godz", price: "35zł" },
-    { time: "cały dzień", price: "200zł" },
+  const predefinedTimes = [
+    { time: "0:01", price: 0.5, label: "1 min - 0,5 zł" },
+    { time: "0:05", price: 1, label: "5 min - 1 zł" },
+    { time: "1:00", price: 20, label: "1 godz - 20 zł" },
+    { time: "2:00", price: 35, label: "2 godz - 35 zł" },
+    { time: "24:00", price: 200, label: "cały dzień - 200 zł" }
   ];
 
   useEffect(() => {
@@ -57,7 +54,6 @@ const PanelAdmin = () => {
 
   const deleteTimeRange = async (timeRange) => {
     try {
-      // Correct the endpoint URL if necessary
       const response = await axios.delete(`https://projket2.onrender.com/price/${timeRange}`);
       console.log('Time range deleted:', response.data);
       handleGetPrice();
@@ -128,27 +124,27 @@ const PanelAdmin = () => {
           type="text"
           onChange={(e) => setCena(e.target.value)}
         />
+        <div>
+          <h3>Zdefiniowane Czas i Cena:</h3>
+          <ul>
+            {predefinedTimes.map((item) => (
+              <li key={item.time}>
+                <button onClick={() => {
+                  setCzas(item.time);
+                  setCena(item.price);
+                  handleSetPrice();
+                }}>
+                  {item.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
       <div className="admin-panel-buttons">
         <button onClick={handleSetPrice}>DODAJ</button>
         <button onClick={downloadCSV}>Pobierz CSV</button>
       </div>
-
-      <div className='predefined-prices'>
-        <h3>Ceny kar umownych:</h3>
-        {penaltyPrices.map((item, index) => (
-          <div key={index}>
-            {item.time} - {item.price}
-          </div>
-        ))}
-        <h3>Ceny zadeklarowane:</h3>
-        {declaredTimes.map((item, index) => (
-          <div key={index}>
-            {item.time} - {item.price}
-          </div>
-        ))}
-      </div>
-
       <div className='price-table-container'>
         <div className='price-table-header'>
           <div className='price-column'>Cena</div>

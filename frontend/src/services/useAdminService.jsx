@@ -8,14 +8,34 @@ export function useAdminService() {
   const [postData, setPostData] = useState({});
   const { data, handleGetData } = useGetData();
 
+  const czasyZadeklarowane = {
+    '1 godz': 20,
+    '2 godz': 35,
+    'cały dzień': 200
+  };
+
+  const karyUmowne = {
+    '1 min': 0.5,
+    '5 min': 1
+  };
+
   useEffect(() => {
     setPostData({ czas, cena });
   }, [czas, cena]);
 
   const handleSetPrice = async () => {
     try {
-      console.log('Sending data:', postData);
-      const res = await axios.post('https://projket2.onrender.com/addPrice', postData);
+      let finalPrice = cena;
+
+      // Ustal cenę na podstawie zdefiniowanych czasów i cen
+      if (czasyZadeklarowane[czas]) {
+        finalPrice = czasyZadeklarowane[czas];
+      } else if (karyUmowne[czas]) {
+        finalPrice = karyUmowne[czas];
+      }
+
+      console.log('Sending data:', { czas, cena: finalPrice });
+      const res = await axios.post('https://projket2.onrender.com/addPrice', { czas, cena: finalPrice });
       console.log('Response:', res);
       setCena('');
       setCzas('');
