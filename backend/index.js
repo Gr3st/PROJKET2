@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 require('dotenv/config');
 const Schemas = require('./models/schemas');
 
-
 const app = express();
 
 app.use(bodyParser.json());
@@ -35,11 +34,14 @@ app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
 
-
 // Function to initialize default prices
 const initializeDefaultPrices = async () => {
     const defaultPrices = [
-        { timeRange: "00:09", cena: "1" },
+        { timeRange: "00:01", cena: "0.5" },
+        { timeRange: "00:05", cena: "2" },
+        { timeRange: "01:00", cena: "15" },
+        { timeRange: "02:00", cena: "30" },
+        { timeRange: "24:00", cena: "200" },
         // Add more default prices as needed
     ];
 
