@@ -39,7 +39,7 @@ app.listen(port, () => {
 // Function to initialize default prices
 const initializeDefaultPrices = async () => {
     const defaultPrices = [
-        { timeRange: ["00:01", "00:05"], cena: ["1zł", "2zł"] },
+        { timeRange: "00:09", cena: "1" },
         // Add more default prices as needed
     ];
 
