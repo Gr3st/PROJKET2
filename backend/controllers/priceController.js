@@ -69,3 +69,24 @@ exports.usunPrice = async (req, res) => {
       res.status(500).send('Internal Server Error');
   }
 };
+
+const Schemas = require('./models/schemas');
+
+async function initializePrices() {
+  const predefinedPrices = [
+    { timeRange: '00:01', cena: 0.5 },
+    { timeRange: '00:05', cena: 1 },
+    { timeRange: '01:00', cena: 20 },
+    { timeRange: '02:00', cena: 35 },
+    { timeRange: '24:00', cena: 200 }
+  ];
+
+  for (const price of predefinedPrices) {
+    const existingPrice = await Schemas.Ceny.findOne({ timeRange: price.timeRange });
+    if (!existingPrice) {
+      const newPrice = new Schemas.Ceny(price);
+      await newPrice.save();
+    }
+  }
+}
+

@@ -11,14 +11,6 @@ const PanelAdmin = () => {
   const [updStatus, setUpdStatus] = useState(false);
   const [selectedPrice, setSelectedPrice] = useState(null);
 
-  const predefinedTimes = [
-    { time: "0:01", price: 0.5, label: "1 min - 0,5 zł" },
-    { time: "0:05", price: 1, label: "5 min - 1 zł" },
-    { time: "1:00", price: 20, label: "1 godz - 20 zł" },
-    { time: "2:00", price: 35, label: "2 godz - 35 zł" },
-    { time: "24:00", price: 200, label: "cały dzień - 200 zł" }
-  ];
-
   useEffect(() => {
     handleGetPrice();
     setInputTime(czas);
@@ -67,7 +59,7 @@ const PanelAdmin = () => {
       await axios.put(`https://projket2.onrender.com/price/update`, { cena, nowaCena });
       handleGetPrice();
     } catch (error) {
-      console.error('Error updating expiration status:', error);
+      console.error('Error updating price:', error);
     }
   };
 
@@ -124,22 +116,6 @@ const PanelAdmin = () => {
           type="text"
           onChange={(e) => setCena(e.target.value)}
         />
-        <div>
-          <h3>Zdefiniowane Czas i Cena:</h3>
-          <ul>
-            {predefinedTimes.map((item) => (
-              <li key={item.time}>
-                <button onClick={() => {
-                  setCzas(item.time);
-                  setCena(item.price);
-                  handleSetPrice();
-                }}>
-                  {item.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
       </div>
       <div className="admin-panel-buttons">
         <button onClick={handleSetPrice}>DODAJ</button>
