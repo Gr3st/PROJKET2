@@ -1,14 +1,5 @@
 const Schemas = require('../models/schemas');
 
-// Predefined time ranges and prices
-const predefinedPrices = [
-  { timeRange: '00:01', cena: 0.5 },
-  { timeRange: '00:05', cena: 1 },
-  { timeRange: '01:00', cena: 20 },
-  { timeRange: '02:00', cena: 35 },
-  { timeRange: '24:00', cena: 200 }
-];
-
 exports.dodajCene = async (req, res) => {
   const { czas, cena } = req.body;
 
@@ -23,8 +14,7 @@ exports.dodajCene = async (req, res) => {
       return res.status(400).send('Cena already exists');
     }
 
-    const formattedCzas = formatTime(czas);
-    const newCena = new Schemas.Ceny({ timeRange: formattedCzas, cena });
+    const newCena = new Schemas.Ceny({ timeRange: czas, cena });
     await newCena.save();
     res.send('Price added successfully');
   } catch (error) {
@@ -34,13 +24,13 @@ exports.dodajCene = async (req, res) => {
 };
 
 exports.dataPrice = async (req, res) => {
-  try {
-    const price = await Schemas.Ceny.find({});
-    res.json(price);
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Internal Server Error');
-  }
+    try {
+        const price = await Schemas.Ceny.find({});
+        res.json(price);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('Internal Server Error');
+    }
 };
 
 exports.updatePrice = async (req, res) => {
@@ -56,7 +46,7 @@ exports.updatePrice = async (req, res) => {
     ceny.cena = nowaCena;
     await ceny.save();
 
-    res.send('Price updated successfully');
+    res.send('Price status updated successfully');
   } catch (error) {
     console.error('Error:', error);
     res.status(500).send('Internal Server Error');
@@ -67,47 +57,15 @@ exports.usunPrice = async (req, res) => {
   const { timeRange } = req.params;
 
   try {
-    const result = await Schemas.Ceny.deleteOne({ timeRange });
+      const result = await Schemas.Ceny.deleteOne({ timeRange });
 
-    if (result.deletedCount === 0) {
-      return res.status(404).send('Price not found');
-    }
+      if (result.deletedCount === 0) {
+          return res.status(404).send('Price not found');
+      }
 
-    res.send('Price deleted successfully');
+      res.send('Price deleted successfully');
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Internal Server Error');
+      console.error('Error:', error);
+      res.status(500).send('Internal Server Error');
   }
 };
-
-// Initialize the predefined prices on server start
-const initializePrices = async () => {
-  try {
-    const existingPrices = await Schemas.Ceny.find({});
-    if (existingPrices.length === 0) {
-      await Schemas.Ceny.insertMany(predefinedPrices);
-      console.log('Predefined prices initialized.');
-    } else {
-      console.log('Prices already initialized.');
-    }
-  } catch (error) {
-    console.error('Error initializing prices:', error);
-  }
-};
-
-const formatTime = (time) => {
-  const timeParts = time.split(':');
-  let hours = parseInt(timeParts[0], 10);
-  let minutes = parseInt(timeParts[1], 10);
-
-  if (hours < 10) {
-    hours = `0${hours}`;
-  }
-  if (minutes < 10) {
-    minutes = `0${minutes}`;
-  }
-
-  return `${hours}:${minutes}`;
-};
-
-initializePrices();

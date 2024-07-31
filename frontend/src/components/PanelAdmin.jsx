@@ -11,6 +11,17 @@ const PanelAdmin = () => {
   const [updStatus, setUpdStatus] = useState(false);
   const [selectedPrice, setSelectedPrice] = useState(null);
 
+  const penaltyPrices = [
+    { time: "1 min", price: "0.5zł" },
+    { time: "5 min", price: "1zł" },
+  ];
+
+  const declaredTimes = [
+    { time: "1 godz", price: "20zł" },
+    { time: "2 godz", price: "35zł" },
+    { time: "cały dzień", price: "200zł" },
+  ];
+
   useEffect(() => {
     handleGetPrice();
     setInputTime(czas);
@@ -18,9 +29,10 @@ const PanelAdmin = () => {
 
   const handleTimeChange = (e) => {
     const value = e.target.value;
-    const formattedTime = formatTime(value);
+    const [hours, minutes] = parseTime(value);
 
-    if (formattedTime) {
+    if (hours >= 0 && minutes >= 0 && minutes < 60) {
+      const formattedTime = `${hours}:${minutes.toString().padStart(2, '0')}`;
       setCzas(formattedTime);
       setInputTime(formattedTime);
     } else {
@@ -28,7 +40,7 @@ const PanelAdmin = () => {
     }
   };
 
-  const formatTime = (time) => {
+  const parseTime = (time) => {
     const timeParts = time.split(':');
     let hours = 0;
     let minutes = 0;
@@ -40,17 +52,12 @@ const PanelAdmin = () => {
       minutes = parseInt(timeParts[1], 10);
     }
 
-    if (hours >= 0 && minutes >= 0 && minutes < 60) {
-      const formattedHours = hours < 10 ? `0${hours}` : hours;
-      const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-      return `${formattedHours}:${formattedMinutes}`;
-    }
-
-    return null;
+    return [hours, minutes];
   };
 
   const deleteTimeRange = async (timeRange) => {
     try {
+      // Correct the endpoint URL if necessary
       const response = await axios.delete(`https://projket2.onrender.com/price/${timeRange}`);
       console.log('Time range deleted:', response.data);
       handleGetPrice();
@@ -64,7 +71,7 @@ const PanelAdmin = () => {
       await axios.put(`https://projket2.onrender.com/price/update`, { cena, nowaCena });
       handleGetPrice();
     } catch (error) {
-      console.error('Error updating price:', error);
+      console.error('Error updating expiration status:', error);
     }
   };
 
@@ -126,6 +133,22 @@ const PanelAdmin = () => {
         <button onClick={handleSetPrice}>DODAJ</button>
         <button onClick={downloadCSV}>Pobierz CSV</button>
       </div>
+
+      <div className='predefined-prices'>
+        <h3>Ceny kar umownych:</h3>
+        {penaltyPrices.map((item, index) => (
+          <div key={index}>
+            {item.time} - {item.price}
+          </div>
+        ))}
+        <h3>Ceny zadeklarowane:</h3>
+        {declaredTimes.map((item, index) => (
+          <div key={index}>
+            {item.time} - {item.price}
+          </div>
+        ))}
+      </div>
+
       <div className='price-table-container'>
         <div className='price-table-header'>
           <div className='price-column'>Cena</div>
