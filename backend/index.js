@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const router = require('./routes/router');
 const mongoose = require('mongoose');
 require('dotenv/config');
+const Schemas = require('./models/schemas');
+
 
 const app = express();
 
@@ -33,7 +35,6 @@ app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
 
-const Schemas = require('../models/schemas');
 
 // Function to initialize default prices
 const initializeDefaultPrices = async () => {
