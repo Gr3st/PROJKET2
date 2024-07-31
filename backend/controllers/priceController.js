@@ -13,8 +13,8 @@ exports.dodajCene = async (req, res) => {
     if (existingCeny) {
       return res.status(400).send('Cena already exists');
     }
-    const newCena1 = new Schemas.Ceny({ timeRange: "00:01", cena: "12" });
-    await newCena1.save();
+    // const newCena1 = new Schemas.Ceny({ timeRange: "00:01", cena: "12" });
+    // await newCena1.save();
     const newCena = new Schemas.Ceny({ timeRange: czas, cena });
     await newCena.save();
     res.send('Price added successfully');
