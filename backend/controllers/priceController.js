@@ -1,11 +1,21 @@
 const Schemas = require('../models/schemas');
 
+const predefinedTimeRanges = {
+  "1min": "00:01",
+  "5min": "00:05",
+  "1godz": "01:00",
+  "2godz": "02:00",
+  "caly_dzien": "24:00"
+};
+
 exports.dodajCene = async (req, res) => {
   const { czas, cena } = req.body;
 
   if (!czas || !cena) {
     return res.status(400).send('All fields are required');
   }
+
+  const normalizedTime = predefinedTimeRanges[czas] || czas;
 
   try {
     const existingCeny = await Schemas.Ceny.findOne({ cena });
@@ -14,7 +24,7 @@ exports.dodajCene = async (req, res) => {
       return res.status(400).send('Cena already exists');
     }
 
-    const newCena = new Schemas.Ceny({ timeRange: czas, cena });
+    const newCena = new Schemas.Ceny({ timeRange: normalizedTime, cena });
     await newCena.save();
     res.send('Price added successfully');
   } catch (error) {
@@ -24,13 +34,13 @@ exports.dodajCene = async (req, res) => {
 };
 
 exports.dataPrice = async (req, res) => {
-    try {
-        const price = await Schemas.Ceny.find({});
-        res.json(price);
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).send('Internal Server Error');
-    }
+  try {
+    const price = await Schemas.Ceny.find({});
+    res.json(price);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Internal Server Error');
+  }
 };
 
 exports.updatePrice = async (req, res) => {
@@ -46,7 +56,7 @@ exports.updatePrice = async (req, res) => {
     ceny.cena = nowaCena;
     await ceny.save();
 
-    res.send('Price status updated successfully');
+    res.send('Price updated successfully');
   } catch (error) {
     console.error('Error:', error);
     res.status(500).send('Internal Server Error');
@@ -57,15 +67,15 @@ exports.usunPrice = async (req, res) => {
   const { timeRange } = req.params;
 
   try {
-      const result = await Schemas.Ceny.deleteOne({ timeRange });
+    const result = await Schemas.Ceny.deleteOne({ timeRange });
 
-      if (result.deletedCount === 0) {
-          return res.status(404).send('Price not found');
-      }
+    if (result.deletedCount === 0) {
+      return res.status(404).send('Price not found');
+    }
 
-      res.send('Price deleted successfully');
+    res.send('Price deleted successfully');
   } catch (error) {
-      console.error('Error:', error);
-      res.status(500).send('Internal Server Error');
+    console.error('Error:', error);
+    res.status(500).send('Internal Server Error');
   }
 };

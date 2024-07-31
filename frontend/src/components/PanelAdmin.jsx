@@ -4,6 +4,8 @@ import { useGetPrice } from '../services/useGetPrice';
 import "../style/Adm.css";
 import axios from 'axios';
 
+const predefinedTimes = ["1min", "5min", "1godz", "2godz", "caly_dzien"];
+
 const PanelAdmin = () => {
   const { cena, setCena, czas, setCzas, handleSetPrice, downloadCSV } = useAdminService();
   const { dataPrice, handleGetPrice } = useGetPrice();
@@ -18,14 +20,18 @@ const PanelAdmin = () => {
 
   const handleTimeChange = (e) => {
     const value = e.target.value;
-    const [hours, minutes] = parseTime(value);
-
-    if (hours >= 0 && minutes >= 0 && minutes < 60) {
-      const formattedTime = `${hours}:${minutes.toString().padStart(2, '0')}`;
-      setCzas(formattedTime);
-      setInputTime(formattedTime);
-    } else {
+    if (predefinedTimes.includes(value)) {
+      setCzas(value);
       setInputTime(value);
+    } else {
+      const [hours, minutes] = parseTime(value);
+      if (hours >= 0 && minutes >= 0 && minutes < 60) {
+        const formattedTime = `${hours}:${minutes.toString().padStart(2, '0')}`;
+        setCzas(formattedTime);
+        setInputTime(formattedTime);
+      } else {
+        setInputTime(value);
+      }
     }
   };
 
@@ -46,7 +52,6 @@ const PanelAdmin = () => {
 
   const deleteTimeRange = async (timeRange) => {
     try {
-      // Correct the endpoint URL if necessary
       const response = await axios.delete(`https://projket2.onrender.com/price/${timeRange}`);
       console.log('Time range deleted:', response.data);
       handleGetPrice();
@@ -110,7 +115,7 @@ const PanelAdmin = () => {
           type="text"
           value={inputTime}
           onChange={handleTimeChange}
-          placeholder="HH:MM"
+          placeholder="1min, 5min, 1godz, 2godz, caly_dzien lub HH:MM"
         />
         <h3>Ustaw Ceny</h3>
         <input
