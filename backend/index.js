@@ -22,25 +22,38 @@ app.use(cors(corsOptions));
 app.use('/', router);
 
 mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('DB Connected!'))
+    .then(() => {
+        console.log('DB Connected!');
+        initializeDefaultPrices();  // Initialize default prices after DB connection
+    })
     .catch(err => console.log(err));
-
-// mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-// .then(() => {
-//     console.log('Connected to MongoDB');
-
-//     // Wywołaj funkcję inicjalizacji cen po połączeniu z bazą danych
-//     initializePrices().then(() => {
-//     console.log('Prices initialized');
-//     }).catch((error) => {
-//     console.error('Error initializing prices:', error);
-//     });
-// })
-// .catch(error => {
-//     console.error('Error connecting to MongoDB:', error);
-// });
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+const Schemas = require('../models/schemas');
+
+// Function to initialize default prices
+const initializeDefaultPrices = async () => {
+    const defaultPrices = [
+        { timeRange: ["00:01", "00:05"], cena: ["1zł", "2zł"] },
+        // Add more default prices as needed
+    ];
+
+    for (const price of defaultPrices) {
+        try {
+            const existingPrice = await Schemas.Ceny.findOne({ timeRange: price.timeRange });
+            if (!existingPrice) {
+                const newPrice = new Schemas.Ceny(price);
+                await newPrice.save();
+                console.log(`Default price ${price.cena} added successfully.`);
+            } else {
+                console.log(`Default price ${price.cena} already exists.`);
+            }
+        } catch (error) {
+            console.error('Error initializing default prices:', error);
+        }
+    }
+};
