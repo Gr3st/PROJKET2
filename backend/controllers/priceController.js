@@ -69,9 +69,6 @@ exports.usunPrice = async (req, res) => {
       res.status(500).send('Internal Server Error');
   }
 };
-
-const Schemas = require('./models/schemas');
-
 async function initializePrices() {
   const predefinedPrices = [
     { timeRange: '00:01', cena: 0.5 },
