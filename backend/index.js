@@ -36,9 +36,9 @@ mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology
 //     console.error('Error initializing prices:', error);
 //     });
 // })
-.catch(error => {
-    console.error('Error connecting to MongoDB:', error);
-});
+// .catch(error => {
+//     console.error('Error connecting to MongoDB:', error);
+// });
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
