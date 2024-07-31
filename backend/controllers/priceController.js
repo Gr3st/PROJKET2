@@ -1,12 +1,13 @@
 const Schemas = require('../models/schemas');
 
-const predefinedTimeRanges = {
-  "1min": "00:01",
-  "5min": "00:05",
-  "1godz": "01:00",
-  "2godz": "02:00",
-  "caly_dzien": "24:00"
-};
+// Predefined time ranges and prices
+const predefinedPrices = [
+  { timeRange: '1 min', cena: 0.5 },
+  { timeRange: '5 min', cena: 1 },
+  { timeRange: '1 godz', cena: 20 },
+  { timeRange: '2 godz', cena: 35 },
+  { timeRange: 'cały dzień', cena: 200 }
+];
 
 exports.dodajCene = async (req, res) => {
   const { czas, cena } = req.body;
@@ -15,8 +16,6 @@ exports.dodajCene = async (req, res) => {
     return res.status(400).send('All fields are required');
   }
 
-  const normalizedTime = predefinedTimeRanges[czas] || czas;
-
   try {
     const existingCeny = await Schemas.Ceny.findOne({ cena });
 
@@ -24,7 +23,7 @@ exports.dodajCene = async (req, res) => {
       return res.status(400).send('Cena already exists');
     }
 
-    const newCena = new Schemas.Ceny({ timeRange: normalizedTime, cena });
+    const newCena = new Schemas.Ceny({ timeRange: czas, cena });
     await newCena.save();
     res.send('Price added successfully');
   } catch (error) {
@@ -79,3 +78,20 @@ exports.usunPrice = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+// Initialize the predefined prices on server start
+const initializePrices = async () => {
+  try {
+    const existingPrices = await Schemas.Ceny.find({});
+    if (existingPrices.length === 0) {
+      await Schemas.Ceny.insertMany(predefinedPrices);
+      console.log('Predefined prices initialized.');
+    } else {
+      console.log('Prices already initialized.');
+    }
+  } catch (error) {
+    console.error('Error initializing prices:', error);
+  }
+};
+
+initializePrices();

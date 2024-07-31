@@ -4,8 +4,6 @@ import { useGetPrice } from '../services/useGetPrice';
 import "../style/Adm.css";
 import axios from 'axios';
 
-const predefinedTimes = ["1min", "5min", "1godz", "2godz", "caly_dzien"];
-
 const PanelAdmin = () => {
   const { cena, setCena, czas, setCzas, handleSetPrice, downloadCSV } = useAdminService();
   const { dataPrice, handleGetPrice } = useGetPrice();
@@ -20,18 +18,14 @@ const PanelAdmin = () => {
 
   const handleTimeChange = (e) => {
     const value = e.target.value;
-    if (predefinedTimes.includes(value)) {
-      setCzas(value);
-      setInputTime(value);
+    const [hours, minutes] = parseTime(value);
+
+    if (hours >= 0 && minutes >= 0 && minutes < 60) {
+      const formattedTime = `${hours}:${minutes.toString().padStart(2, '0')}`;
+      setCzas(formattedTime);
+      setInputTime(formattedTime);
     } else {
-      const [hours, minutes] = parseTime(value);
-      if (hours >= 0 && minutes >= 0 && minutes < 60) {
-        const formattedTime = `${hours}:${minutes.toString().padStart(2, '0')}`;
-        setCzas(formattedTime);
-        setInputTime(formattedTime);
-      } else {
-        setInputTime(value);
-      }
+      setInputTime(value);
     }
   };
 
@@ -65,7 +59,7 @@ const PanelAdmin = () => {
       await axios.put(`https://projket2.onrender.com/price/update`, { cena, nowaCena });
       handleGetPrice();
     } catch (error) {
-      console.error('Error updating expiration status:', error);
+      console.error('Error updating price:', error);
     }
   };
 
@@ -115,7 +109,7 @@ const PanelAdmin = () => {
           type="text"
           value={inputTime}
           onChange={handleTimeChange}
-          placeholder="1min, 5min, 1godz, 2godz, caly_dzien lub HH:MM"
+          placeholder="HH:MM"
         />
         <h3>Ustaw Ceny</h3>
         <input
