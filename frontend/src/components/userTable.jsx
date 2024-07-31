@@ -2,10 +2,12 @@ import '../style/userForm.css';
 import axios from 'axios';
 import { useGetData } from '../services/useGetData';
 import { useEffect, useState, useCallback } from 'react';
+import { useFormService } from '../services/useFormService';
 
 function UserTable() {
   const { data, handleGetData } = useGetData();
   const [currentTime, setCurrentTime] = useState(Date.now());
+  const { handleStopCountdown } = useFormService();  // Import handleStopCountdown
 
   const deleteUser = async (userId) => {
     try {
@@ -64,7 +66,7 @@ function UserTable() {
             {!res.exitDate ? (
               <div>
                 {Math.floor(res.remainingTime / 3600)}h {Math.floor((res.remainingTime % 3600) / 60)}m {Math.floor(res.remainingTime % 60)}s 
-                <button onClick={() => handleStop(res.id, res.exitDate)}>STOP</button>
+                <button onClick={() => handleStopCountdown(res.id, res.exitDate)}>STOP</button>
               </div>
             ) : (
               res.remainingTime <= 0 ? (
