@@ -1,12 +1,11 @@
 import '../style/userForm.css';
 import axios from 'axios';
 import { useGetData } from '../services/useGetData';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormService } from '../services/useFormService';
 
 function UserTable() {
   const { data, handleGetData } = useGetData();
-  const [currentTime, setCurrentTime] = useState(Date.now());
   const { handleStopCountdown } = useFormService();  // Import handleStopCountdown
 
   const deleteUser = async (userId) => {
@@ -21,10 +20,6 @@ function UserTable() {
 
   useEffect(() => {
     handleGetData();
-    const interval = setInterval(() => {
-      setCurrentTime(Date.now());
-    }, 1000);
-    return () => clearInterval(interval);
   }, [handleGetData]);
 
   const calculateOverdueTime = (exitDate) => {
