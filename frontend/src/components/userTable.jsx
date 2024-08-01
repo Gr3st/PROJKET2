@@ -40,17 +40,18 @@ function UserTable() {
   };
 
   const calculateAdditionalCost = (exitDate) => {
-    const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
-    const checkOver= (new Date(exitDate).getTime()-Date.now()) / 1000;
-    if(checkOver>=0){
+    const overdueTime = calculateOverdueTime(exitDate);
+    if (overdueTime > 0) {
       const overtimeMinutes = Math.ceil(overdueTime / 60);
-      return Math.floor(overtimeMinutes / 1); // Adjust this as needed for specific cost calculations
+      const costPerMinute = 1; // Adjust this as needed for specific cost calculations
+      return overtimeMinutes * costPerMinute;
     }
+    return 0;
   };
 
   const handleStop = useCallback((userId, exitDate) => {
     const overdueTime = calculateOverdueTime(exitDate);
-    const additionalCost = calculateAdditionalCost(overdueTime);
+    const additionalCost = calculateAdditionalCost(exitDate);
     updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
   }, [updateExpirationStatus]);
 
@@ -69,8 +70,6 @@ function UserTable() {
     return timeDifference;
   };
 
-  
-
   return (
     <div className="user-table">
       <div className="table-header">
@@ -88,10 +87,9 @@ function UserTable() {
           <div className="table-cell">{res.nazwisko}</div>
           <div className="table-cell">{res.email}</div>
           <div className="table-cell">{res.id}</div>
-          <div className="table-cell">{res.cena + calculateAdditionalCost(res.exitDate)}</div>
-          {/* <div className="table-cell">{calculateOverdueTime(res.exitDate)>0?res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate)):res.cena}</div> */}
-          {/* <div className="table-cell">{calculateTimeDifference(res.entryDate, res.exitDate)>=0?res.cena : res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate))}</div>
-          {console.log(res.countdown+" "+calculateTimeDifference(res.entryDate, res.exitDate))} */}
+          <div className="table-cell">
+            {res.cena + (res.exitDate ? calculateAdditionalCost(res.exitDate) : 0)}
+          </div>
           <div className="table-cell">
             {!res.exitDate ? (
               <div>
