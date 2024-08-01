@@ -6,6 +6,7 @@ import { useEffect, useState, useCallback } from 'react';
 function UserTable() {
   const { data, handleGetData } = useGetData();
   const [currentTime, setCurrentTime] = useState(Date.now());
+  const [stoppedUsers, setStoppedUsers] = useState({}); // New state to track stopped users
 
   const deleteUser = async (userId) => {
     try {
@@ -53,6 +54,7 @@ function UserTable() {
     const overdueTime = calculateOverdueTime(exitDate);
     const additionalCost = calculateAdditionalCost(0, exitDate); // remainingTime is already < 0 in this case
     updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
+    setStoppedUsers(prev => ({ ...prev, [userId]: true })); // Mark the user as stopped
   }, [updateExpirationStatus, calculateAdditionalCost]);
 
   useEffect(() => {
@@ -94,10 +96,10 @@ function UserTable() {
             {!res.exitDate ? (
               <div>
                 {Math.floor(res.remainingTime / 3600)}h {Math.floor((res.remainingTime % 3600) / 60)}m {Math.floor(res.remainingTime % 60)}s 
-                <button onClick={() => handleStop(res.id, new Date().toISOString())}>STOP</button>
+                {!stoppedUsers[res.id] && <button onClick={() => handleStop(res.id, new Date().toISOString())}>STOP</button>}
               </div>
             ) : (
-              res.remainingTime <= 0 ? (
+              res.remainingTime <= 0 && !stoppedUsers[res.id]? (
                 <>
                   {console.log(" cd"+res.countdown+" mth:"+Math.floor((new Date(res.exitDate).getTime() - new Date(res.entryDate).getTime()) / 1000))}
                   Przekroczono czas o {Math.floor(calculateOverdueTime(res.exitDate) / 3600)}h {Math.floor((calculateOverdueTime(res.exitDate) % 3600) / 60)}m {Math.floor(calculateOverdueTime(res.exitDate) % 60)}s

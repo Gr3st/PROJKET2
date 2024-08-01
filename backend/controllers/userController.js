@@ -57,15 +57,8 @@ exports.data = async (req, res) => {
 
         const usersWithRemainingTime = users.map(user => {
             const elapsedTime = (currentTime - new Date(user.entryDate).getTime()) / 1000;
-            let remainingTime;
-
-            if (Math.floor((new Date(user.exitDate).getTime() - new Date(user.entryDate).getTime()) / 1000) <= user.countdown) {
-                remainingTime = 1;
-            } else {
-                remainingTime = Math.max(user.countdown - elapsedTime, 0);
-            }
-
-            return { ...user.toObject(), remainingTime };
+            const remainingTime = Math.max(user.countdown - elapsedTime, 0);
+            return { ...user.toObject(), remainingTime};
         });
 
         res.json(usersWithRemainingTime);
@@ -74,7 +67,6 @@ exports.data = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
-
 
 // Nowa funkcja do usuwania użytkownika
 exports.usun = async (req, res) => {
