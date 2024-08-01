@@ -6,6 +6,7 @@ import { useEffect, useState, useCallback } from 'react';
 function UserTable() {
   const { data, handleGetData } = useGetData();
   const [currentTime, setCurrentTime] = useState(Date.now());
+  const [localID, setLocalID] = useState(null);
 
   const deleteUser = async (userId) => {
     try {
@@ -16,7 +17,7 @@ function UserTable() {
       console.error('Error deleting user:', error);
     }
   };
-  
+
   const updateExpirationStatus = useCallback(async (userId, exitDate, elapsedTime, additionalCost) => {
     try {
       await axios.put(`https://projket2.onrender.com/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
@@ -37,14 +38,19 @@ function UserTable() {
     const interval = setInterval(() => {
       setCurrentTime(Date.now());
     }, 1000);
-    if(localStorage.getItem('getID')){
-      handleStop(localStorage.getItem('getID'),Date.now());
+    const storedId = localStorage.getItem('getID');
+    if (storedId) {
+      setLocalID(storedId);
     }
-
     return () => clearInterval(interval);
-  }, [handleGetData,handleStop]);
+  }, [handleGetData]);
 
-
+  useEffect(()=>{
+    if(localID){
+      handleStop(localID,Date.now());
+      localStorage.removeItem('getID');
+    }
+  },[localID])
 
   const calculateOverdueTime = (exitDate) => {
     const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
