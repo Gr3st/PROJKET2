@@ -1,3 +1,4 @@
+// File path: src/components/UserForm.js
 import '../style/userForm.css';
 import { useFormService } from '../services/useFormService';
 import { useGetPrice } from '../services/useGetPrice';
@@ -26,14 +27,16 @@ function UserForm() {
     const selectedPrice = dataPrice.find(res => res.timeRange === selectedTimeRange)?.cena || '';
     setCena(selectedPrice);
   };
+
   const handleIdChange = (newId) => {
     if (newId) {
       const confirmStop = window.confirm("Czy jesteś pewien, że chcesz zatrzymać czas dla tego użytkownika?");
       if (confirmStop) {
-        localStorage.setItem('stopID',newId);
+        localStorage.setItem('stopID', newId);
       }
     }
   };
+
   const handleAddChild = () => {
     const countdownParts = countdown.split(':');
     const countdownSeconds = parseInt(countdownParts[0], 10) * 3600 + parseInt(countdownParts[1], 10) * 60;
@@ -48,7 +51,7 @@ function UserForm() {
       <input type="text" placeholder="Nazwisko" value={nazwisko} onChange={(e) => setNazwisko(e.target.value)} onKeyDown={handleKeyPress} />
       <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={handleKeyPress} />
       <input type="text" placeholder="ID" value={id} onChange={(e) => setId(e.target.value)} onKeyDown={handleKeyPress} />
-      <button onClick={()=>handleIdChange(id)}>STOP</button>
+      <button onClick={() => handleIdChange(id)}>STOP</button>
 
       <div>
         Czas: 
