@@ -26,7 +26,14 @@ function UserForm() {
     const selectedPrice = dataPrice.find(res => res.timeRange === selectedTimeRange)?.cena || '';
     setCena(selectedPrice);
   };
-
+  const handleIdChange = (newId) => {
+    if (newId) {
+      const confirmStop = window.confirm("Czy jesteś pewien, że chcesz zatrzymać czas dla tego użytkownika?");
+      if (confirmStop) {
+        localStorage.setItem('stopID',newId);
+      }
+    }
+  };
   const handleAddChild = () => {
     const countdownParts = countdown.split(':');
     const countdownSeconds = parseInt(countdownParts[0], 10) * 3600 + parseInt(countdownParts[1], 10) * 60;
@@ -41,6 +48,7 @@ function UserForm() {
       <input type="text" placeholder="Nazwisko" value={nazwisko} onChange={(e) => setNazwisko(e.target.value)} onKeyDown={handleKeyPress} />
       <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={handleKeyPress} />
       <input type="text" placeholder="ID" value={id} onChange={(e) => setId(e.target.value)} onKeyDown={handleKeyPress} />
+      <button onClick={(e)=>handleIdChang(e.target.value)}>STOP</button>
 
       <div>
         Czas: 

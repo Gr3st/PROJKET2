@@ -22,6 +22,10 @@ function UserTable() {
     const interval = setInterval(() => {
       setCurrentTime(Date.now());
     }, 1000);
+    if(localStorage.getItem('getID')){
+      handleStop(localStorage.getItem('getID'),currentTime);
+    }
+
     return () => clearInterval(interval);
   }, [handleGetData]);
 
