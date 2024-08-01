@@ -17,6 +17,12 @@ function UserTable() {
     }
   };
 
+  const handleStop = useCallback((userId, exitDate) => {
+    const overdueTime = calculateOverdueTime(exitDate);
+    const additionalCost = calculateAdditionalCost(overdueTime);
+    updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
+  }, [updateExpirationStatus]);
+
   useEffect(() => {
     handleGetData();
     const interval = setInterval(() => {
@@ -55,12 +61,6 @@ function UserTable() {
     const costPer5Minute = 1.5;
     return overtimeMinutes===1?overtimeMinutes * costPerMinute:overtimeMinutes * costPer5Minute;
   };
-
-  const handleStop = useCallback((userId, exitDate) => {
-    const overdueTime = calculateOverdueTime(exitDate);
-    const additionalCost = calculateAdditionalCost(overdueTime);
-    updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
-  }, [updateExpirationStatus]);
 
   useEffect(() => {
     data.forEach(res => {
