@@ -40,7 +40,7 @@ function UserTable() {
   };
 
   const calculateAdditionalCost = (exitDate) => {
-    const overdueTime = calculateOverdueTime(exitDate);
+    const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
     if (overdueTime > 0) {
       const overtimeMinutes = Math.ceil(overdueTime / 60);
       const costPerMinute = 1; // Adjust this as needed for specific cost calculations
@@ -53,7 +53,7 @@ function UserTable() {
     const overdueTime = calculateOverdueTime(exitDate);
     const additionalCost = calculateAdditionalCost(exitDate);
     updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
-  }, [updateExpirationStatus, calculateAdditionalCost]);
+  }, [updateExpirationStatus]);
 
   useEffect(() => {
     data.forEach(res => {
