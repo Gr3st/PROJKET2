@@ -57,8 +57,8 @@ function UserTable() {
 
   useEffect(() => {
     data.forEach(res => {
-      if (!res.exitDate && res.remainingTime <= 0) {
-        handleStop(res.id, res.exitDate);
+      if (res.remainingTime <= 0 && !res.exitDate) {
+        handleStop(res.id, new Date().toISOString());
       }
     });
   }, [data, currentTime, handleStop]);
@@ -94,7 +94,7 @@ function UserTable() {
             {!res.exitDate ? (
               <div>
                 {Math.floor(res.remainingTime / 3600)}h {Math.floor((res.remainingTime % 3600) / 60)}m {Math.floor(res.remainingTime % 60)}s 
-                <button onClick={() => handleStop(res.id, res.exitDate)}>STOP</button>
+                <button onClick={() => handleStop(res.id, new Date().toISOString())}>STOP</button>
               </div>
             ) : (
               res.remainingTime <= 0 ? (
