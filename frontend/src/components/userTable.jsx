@@ -53,7 +53,7 @@ function UserTable() {
     const overdueTime = calculateOverdueTime(exitDate);
     const additionalCost = calculateAdditionalCost(exitDate);
     updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
-  }, [updateExpirationStatus]);
+  }, [updateExpirationStatus, calculateAdditionalCost]);
 
   useEffect(() => {
     data.forEach(res => {
