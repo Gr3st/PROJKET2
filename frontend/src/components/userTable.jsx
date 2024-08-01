@@ -22,7 +22,6 @@ function UserTable() {
     const interval = setInterval(() => {
       setCurrentTime(Date.now());
     }, 1000);
-    
     return () => clearInterval(interval);
   }, [handleGetData]);
 
