@@ -1,4 +1,3 @@
-// File path: src/services/useAdminService.js
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useGetData } from './useGetData';
@@ -38,7 +37,7 @@ export function useAdminService() {
       return '';
     }
 
-    const header = ['Imie', 'Nazwisko', 'Email', 'ID', 'Cena', 'Data Wejscia', 'Data Wyjscia', 'Odliczanie', 'Calkowity Czas', 'Dodatkowy Koszt'];
+    const header = ['Imie', 'Nazwisko', 'Email', 'ID', 'Cena', 'Data Wejscia', 'Data Wyjscia', 'Odliczanie', 'Calkowity Czas'];
     const rows = data.map(user => [
       formatCell(user.imie || ''),
       formatCell(user.nazwisko || ''),
@@ -48,8 +47,7 @@ export function useAdminService() {
       formatCell(user.entryDate ? new Date(user.entryDate).toLocaleDateString() : ''),
       formatCell(user.exitDate ? new Date(user.exitDate).toLocaleDateString() : ''),
       formatCell(user.countdown || ''),
-      formatCell(user.entryDate && user.exitDate ? Math.floor((new Date(user.exitDate).getTime() - new Date(user.entryDate).getTime()) / 1000) : ''),
-      formatCell(user.additionalCost ? `${user.additionalCost}zł` : '')
+      formatCell(user.entryDate && user.exitDate ? Math.floor((new Date(user.exitDate).getTime() - new Date(user.entryDate).getTime()) / 1000) : '')
     ]);
 
     const csvContent = [

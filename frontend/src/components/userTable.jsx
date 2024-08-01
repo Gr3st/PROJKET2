@@ -1,127 +1,78 @@
-// File path: src/components/UserTable.js
+// File path: src/components/UserForm.js
 import '../style/userForm.css';
-import axios from 'axios';
-import { useGetData } from '../services/useGetData';
-import { useEffect, useState, useCallback } from 'react';
+import { useFormService } from '../services/useFormService';
+import { useGetPrice } from '../services/useGetPrice';
+import { useAdminService } from '../services/useAdminService';
+import { useEffect } from 'react';
+import UserTable from './UserTable';
 
-function UserTable() {
-  const { data, handleGetData } = useGetData();
-  const [currentTime, setCurrentTime] = useState(Date.now());
+function UserForm() {
+  const { imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, cena, setCena, countdown, setCountdown, handleSendData } = useFormService();
+  const { dataPrice, handleGetPrice } = useGetPrice();
+  const { cena: adminCena, czas } = useAdminService();
 
-  const deleteUser = async (userId) => {
-    try {
-      const response = await axios.delete(`https://projket2.onrender.com/user/${userId}`);
-      console.log('User deleted:', response.data);
-      handleGetData();
-    } catch (error) {
-      console.error('Error deleting user:', error);
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSendData();
     }
   };
-
-  const updateExpirationStatus = useCallback(async (userId, exitDate, elapsedTime, additionalCost) => {
-    try {
-      await axios.put(`https://projket2.onrender.com/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
-      handleGetData();
-    } catch (error) {
-      console.error('Error updating expiration status:', error);
-    }
-  }, [handleGetData]);
-
-  const calculateOverdueTime = (exitDate) => {
-    const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
-    return overdueTime > 0 ? overdueTime : 0;
-  };
-
-  const calculateAdditionalCost = (countdown, exitDate, check) => {
-    const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
-    if (check < countdown) {
-      return 0;
-    }
-    const overtimeMinutes = Math.ceil(overdueTime / 60);
-    const costPerMinute = 0.5;
-    const costPer5Minute = 1.5;
-    return overtimeMinutes === 1 ? overtimeMinutes * costPerMinute : overtimeMinutes * costPer5Minute;
-  };
-
-  const handleStop = useCallback((userId, exitDate) => {
-    const overdueTime = calculateOverdueTime(exitDate);
-    const additionalCost = calculateAdditionalCost(overdueTime);
-    updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
-  }, [updateExpirationStatus]);
 
   useEffect(() => {
-    handleGetData();
-    const interval = setInterval(() => {
-      setCurrentTime(Date.now());
-    }, 1000);
+    handleGetPrice();
+  }, [czas, adminCena, handleGetPrice]);
 
-    const storedUserId = localStorage.getItem('stopID');
-    if (storedUserId) {
-      handleStop(storedUserId, currentTime);
-      localStorage.removeItem('stopID');
-    }
+  const handleTimeRangeChange = (e) => {
+    const selectedTimeRange = e.target.value;
+    setCountdown(selectedTimeRange);
+    const selectedPrice = dataPrice.find(res => res.timeRange === selectedTimeRange)?.cena || '';
+    setCena(selectedPrice);
+  };
 
-    return () => clearInterval(interval);
-  }, [handleGetData, currentTime, handleStop]);
-
-  useEffect(() => {
-    data.forEach(res => {
-      if (!res.exitDate && res.remainingTime <= 0) {
-        handleStop(res.id, res.exitDate);
+  const handleIdChange = (newId) => {
+    if (newId) {
+      const confirmStop = window.confirm("Czy jesteś pewien, że chcesz zatrzymać czas dla tego użytkownika?");
+      if (confirmStop) {
+        localStorage.setItem('stopID', newId);
       }
-    });
-  }, [data, currentTime, handleStop]);
+    }
+  };
 
-  const calculateTimeDifference = (entryDate, exitDate) => {
-    const entryTime = new Date(entryDate).getTime();
-    const exitTime = new Date(exitDate).getTime();
-    const timeDifference = (exitTime - entryTime) / 1000;
-    return timeDifference;
+  const handleAddChild = () => {
+    const countdownParts = countdown.split(':');
+    const countdownSeconds = parseInt(countdownParts[0], 10) * 3600 + parseInt(countdownParts[1], 10) * 60;
+    const newExpirationTime = new Date(Date.now() + countdownSeconds * 1000);
+
+    handleSendData({ imie, nazwisko, email, id, countdown: countdownSeconds, exitDate: newExpirationTime });
   };
 
   return (
-    <div className="user-table">
-      <div className="table-header">
-        <div className="column-header">IMIE</div>
-        <div className="column-header">NAZWISKO</div>
-        <div className="column-header">EMAIL</div>
-        <div className="column-header">ID</div>
-        <div className="column-header">CENA</div>
-        <div className="column-header">CZAS</div>
-        <div className="column-header">Akcje</div>
+    <div className="user-form">
+      <input type="text" placeholder="Imię" value={imie} onChange={(e) => setImie(e.target.value)} onKeyDown={handleKeyPress} />
+      <input type="text" placeholder="Nazwisko" value={nazwisko} onChange={(e) => setNazwisko(e.target.value)} onKeyDown={handleKeyPress} />
+      <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={handleKeyPress} />
+      <input type="text" placeholder="ID" value={id} onChange={(e) => setId(e.target.value)} onKeyDown={handleKeyPress} />
+      <button onClick={() => handleIdChange(id)}>STOP</button>
+
+      <div>
+        Czas: 
+        <select onChange={handleTimeRangeChange}>
+          <option value="-">-</option>
+          {dataPrice.map(res => (
+            <option key={res.timeRange} value={res.timeRange}>{res.timeRange}</option>
+          ))}
+        </select>
       </div>
-      {data.map(res => (
-        <div className="table-row" key={res.id}>
-          <div className="table-cell">{res.imie}</div>
-          <div className="table-cell">{res.nazwisko}</div>
-          <div className="table-cell">{res.email}</div>
-          <div className="table-cell">{res.id}</div>
-          <div className="table-cell">
-            {res.exitDate ? calculateAdditionalCost(res.countdown, res.exitDate, Math.floor(calculateTimeDifference(res.entryDate, res.exitDate))) + res.cena : res.cena}
-          </div>
-          <div className="table-cell">
-            {!res.exitDate ? (
-              <div>
-                {Math.floor(res.remainingTime / 3600)}h {Math.floor((res.remainingTime % 3600) / 60)}m {Math.floor(res.remainingTime % 60)}s 
-                <button onClick={() => handleStop(res.id, res.exitDate)}>STOP</button>
-              </div>
-            ) : (
-              res.remainingTime <= 0 && Math.floor(calculateTimeDifference(res.entryDate, res.exitDate)) > res.countdown ? (
-                <>
-                  Przekroczono czas o {Math.floor(calculateOverdueTime(res.exitDate) / 3600)}h {Math.floor((calculateOverdueTime(res.exitDate) % 3600) / 60)}m {Math.floor(calculateOverdueTime(res.exitDate) % 60)}s
-                </>
-              ) : (
-                <>{Math.floor(calculateTimeDifference(res.entryDate, res.exitDate) / 3600)}h {Math.floor((calculateTimeDifference(res.entryDate, res.exitDate) % 3600) / 60)}m {Math.floor(calculateTimeDifference(res.entryDate, res.exitDate) % 60)}s</>
-              )
-            )}
-          </div>
-          <div className="table-cell">
-            <button onClick={() => deleteUser(res.id)}>Usuń</button>
-          </div>
-        </div>
-      ))}
+
+      <div>
+        Cena: 
+        {cena}{cena && " zł"}
+      </div>
+
+      <button onClick={handleAddChild}>Dodaj Dziecko</button>
+
+      <UserTable />
     </div>
   );
 }
 
-export default UserTable;
+export default UserForm;
