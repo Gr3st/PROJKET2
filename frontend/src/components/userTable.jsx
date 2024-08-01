@@ -40,7 +40,7 @@ function UserTable() {
   };
 
   const calculateAdditionalCost = (exitDate) => {
-    const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
+    const overdueTime = (new Date(exitDate).getTime()-Date.now()) / 1000;
     if (overdueTime > 0) {
       const overtimeMinutes = Math.ceil(overdueTime / 60);
       const costPerMinute = 1; // Adjust this as needed for specific cost calculations
