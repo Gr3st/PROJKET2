@@ -48,7 +48,7 @@ function UserForm() {
       <input type="text" placeholder="Nazwisko" value={nazwisko} onChange={(e) => setNazwisko(e.target.value)} onKeyDown={handleKeyPress} />
       <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={handleKeyPress} />
       <input type="text" placeholder="ID" value={id} onChange={(e) => setId(e.target.value)} onKeyDown={handleKeyPress} />
-      <button onClick={(e)=>handleIdChange(e.target.value)}>STOP</button>
+      <button onClick={()=>handleIdChange(id)}>STOP</button>
 
       <div>
         Czas: 
