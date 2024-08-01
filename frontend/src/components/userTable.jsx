@@ -50,7 +50,7 @@ function UserTable() {
       handleStop(localID,Date.now());
       localStorage.removeItem('getID');
     }
-  },[localID])
+  },[localID,handleStop])
 
   const calculateOverdueTime = (exitDate) => {
     const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
