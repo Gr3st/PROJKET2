@@ -39,9 +39,9 @@ function UserTable() {
     return overdueTime > 0 ? overdueTime : 0;
   };
 
-  const calculateAdditionalCost = (countdown, exitDate, entryDate) => {
+  const calculateAdditionalCost = (countdown, check) => {
     const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
-    if(Math.floor(calculateTimeDifference(entryDate, exitDate))<=countdown){
+    if(check<=countdown){
       return 0;
     }
     const overtimeMinutes = Math.ceil(overdueTime / 60);
@@ -86,7 +86,7 @@ function UserTable() {
           <div className="table-cell">{res.nazwisko}</div>
           <div className="table-cell">{res.email}</div>
           <div className="table-cell">{res.id}</div>
-          <div className="table-cell">{res.cena + calculateAdditionalCost(res.countdown, res.exitDate, res.entryDate)}</div>
+          <div className="table-cell">{res.cena + calculateAdditionalCost(res.countdown, Math.floor(calculateTimeDifference(res.entryDate, res.exitDate)))}</div>
           {/* <div className="table-cell">{calculateOverdueTime(res.exitDate)>0?res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate)):res.cena}</div> */}
           {/* <div className="table-cell">{res.countdown === calculateTimeDifference(res.entryDate, res.exitDate)?res.cena : res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate))}</div>
            */}
