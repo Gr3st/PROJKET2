@@ -72,7 +72,11 @@ function UserTable() {
             ) : (
               res.remainingTime <= 0 ? (
                 <>
-                  Przekroczono czas o {Math.floor(calculateOverdueTime(res.exitDate) / 3600)}h {Math.floor((calculateOverdueTime(res.exitDate) % 3600) / 60)}m {Math.floor(calculateOverdueTime(res.exitDate) % 60)}s
+                  {isStopped ? (
+                    `Czas zatrzymany`
+                  ) : (
+                    `Przekroczono czas o ${Math.floor(calculateOverdueTime(res.exitDate) / 3600)}h ${Math.floor((calculateOverdueTime(res.exitDate) % 3600) / 60)}m ${Math.floor(calculateOverdueTime(res.exitDate) % 60)}s`
+                  )}
                 </>
               ) : (
                 <>{Math.floor(calculateTimeDifference(res.entryDate, res.exitDate) / 3600)}h {Math.floor((calculateTimeDifference(res.entryDate, res.exitDate) % 3600) / 60)}m {Math.floor(calculateTimeDifference(res.entryDate, res.exitDate) % 60)}s</>
