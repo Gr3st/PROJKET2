@@ -16,6 +16,15 @@ function UserTable() {
       console.error('Error deleting user:', error);
     }
   };
+  
+  const updateExpirationStatus = useCallback(async (userId, exitDate, elapsedTime, additionalCost) => {
+    try {
+      await axios.put(`https://projket2.onrender.com/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
+      handleGetData();
+    } catch (error) {
+      console.error('Error updating expiration status:', error);
+    }
+  }, [handleGetData]);
 
   const handleStop = useCallback((userId, exitDate) => {
     const overdueTime = calculateOverdueTime(exitDate);
@@ -35,14 +44,7 @@ function UserTable() {
     return () => clearInterval(interval);
   }, [handleGetData,handleStop]);
 
-  const updateExpirationStatus = useCallback(async (userId, exitDate, elapsedTime, additionalCost) => {
-    try {
-      await axios.put(`https://projket2.onrender.com/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
-      handleGetData();
-    } catch (error) {
-      console.error('Error updating expiration status:', error);
-    }
-  }, [handleGetData]);
+
 
   const calculateOverdueTime = (exitDate) => {
     const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
