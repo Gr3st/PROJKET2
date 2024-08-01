@@ -6,7 +6,6 @@ import { useEffect, useState, useCallback } from 'react';
 function UserTable() {
   const { data, handleGetData } = useGetData();
   const [currentTime, setCurrentTime] = useState(Date.now());
-  const [stoppedUsers, setStoppedUsers] = useState({}); // New state to track stopped users
 
   const deleteUser = async (userId) => {
     try {
@@ -26,21 +25,6 @@ function UserTable() {
     return () => clearInterval(interval);
   }, [handleGetData]);
 
-  const calculateOverdueTime = (exitDate) => {
-    const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
-    return overdueTime > 0 ? overdueTime : 0;
-  };
-
-  const calculateAdditionalCost = useCallback((remainingTime, exitDate) => {
-    const overdueTime = calculateOverdueTime(exitDate);
-    if (remainingTime > 0) {
-      return 0;
-    }
-    const overtimeMinutes = Math.ceil(overdueTime / 60);
-    const costPerMinute = 1; // Adjust this as needed for specific cost calculations
-    return overtimeMinutes * costPerMinute;
-  }, []);
-
   const updateExpirationStatus = useCallback(async (userId, exitDate, elapsedTime, additionalCost) => {
     try {
       await axios.put(`https://projket2.onrender.com/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
@@ -50,17 +34,26 @@ function UserTable() {
     }
   }, [handleGetData]);
 
+  const calculateOverdueTime = (exitDate) => {
+    const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
+    return overdueTime > 0 ? overdueTime : 0;
+  };
+
+  const calculateAdditionalCost = (overdueTime) => {
+    const overtimeMinutes = Math.ceil(overdueTime / 60);
+    return Math.floor(overtimeMinutes / 1); // Adjust this as needed for specific cost calculations
+  };
+
   const handleStop = useCallback((userId, exitDate) => {
     const overdueTime = calculateOverdueTime(exitDate);
-    const additionalCost = calculateAdditionalCost(0, exitDate); // remainingTime is already < 0 in this case
+    const additionalCost = calculateAdditionalCost(overdueTime);
     updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
-    setStoppedUsers(prev => ({ ...prev, [userId]: true })); // Mark the user as stopped
-  }, [updateExpirationStatus, calculateAdditionalCost]);
+  }, [updateExpirationStatus]);
 
   useEffect(() => {
     data.forEach(res => {
-      if (res.remainingTime <= 0 && !res.exitDate) {
-        handleStop(res.id, new Date().toISOString());
+      if (!res.exitDate && res.remainingTime <= 0) {
+        handleStop(res.id, res.exitDate);
       }
     });
   }, [data, currentTime, handleStop]);
@@ -89,19 +82,19 @@ function UserTable() {
           <div className="table-cell">{res.nazwisko}</div>
           <div className="table-cell">{res.email}</div>
           <div className="table-cell">{res.id}</div>
-          <div className="table-cell">
-            {res.cena + (res.exitDate ? calculateAdditionalCost(res.remainingTime, res.exitDate) : 0)}
-          </div>
+          <div className="table-cell">{res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate))}</div>
+          {/* <div className="table-cell">{calculateOverdueTime(res.exitDate)>0?res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate)):res.cena}</div> */}
+          {/* <div className="table-cell">{res.countdown === calculateTimeDifference(res.entryDate, res.exitDate)?res.cena : res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate))}</div>
+           */}
           <div className="table-cell">
             {!res.exitDate ? (
               <div>
                 {Math.floor(res.remainingTime / 3600)}h {Math.floor((res.remainingTime % 3600) / 60)}m {Math.floor(res.remainingTime % 60)}s 
-                {!stoppedUsers[res.id] && <button onClick={() => handleStop(res.id, new Date().toISOString())}>STOP</button>}
+                <button onClick={() => handleStop(res.id, res.exitDate)}>STOP</button>
               </div>
             ) : (
-              res.remainingTime <= 0 && !stoppedUsers[res.id]? (
+              res.remainingTime <= 0 ? (
                 <>
-                  {console.log(" cd"+res.countdown+" mth:"+Math.floor((new Date(res.exitDate).getTime() - new Date(res.entryDate).getTime()) / 1000))}
                   Przekroczono czas o {Math.floor(calculateOverdueTime(res.exitDate) / 3600)}h {Math.floor((calculateOverdueTime(res.exitDate) % 3600) / 60)}m {Math.floor(calculateOverdueTime(res.exitDate) % 60)}s
                 </>
               ) : (
