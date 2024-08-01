@@ -41,12 +41,14 @@ function UserTable() {
 
   const calculateAdditionalCost = (remainingTime, exitDate) => {
     const overdueTime = calculateOverdueTime(exitDate);
-    if (remainingTime < 0) {
-      const overtimeMinutes = Math.ceil(overdueTime / 60);
-      const costPerMinute = 1; // Adjust this as needed for specific cost calculations
-      return overtimeMinutes * costPerMinute;
+    console.log(remainingTime);
+    if (remainingTime > 0) {
+      return 0;
     }
-    return 0;
+    const overtimeMinutes = Math.ceil(overdueTime / 60);
+    const costPerMinute = 1; // Adjust this as needed for specific cost calculations
+    return overtimeMinutes * costPerMinute;
+    
   };
 
   const handleStop = useCallback((userId, exitDate) => {
