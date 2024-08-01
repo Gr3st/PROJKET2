@@ -39,7 +39,11 @@ function UserTable() {
     return overdueTime > 0 ? overdueTime : 0;
   };
 
-  const calculateAdditionalCost = (overdueTime) => {
+  const calculateAdditionalCost = (countdown) => {
+    const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
+    if(Math.floor(calculateTimeDifference(res.entryDate, res.exitDate))<=countdown){
+      return 0;
+    }
     const overtimeMinutes = Math.ceil(overdueTime / 60);
     return Math.floor(overtimeMinutes / 1); // Adjust this as needed for specific cost calculations
   };
@@ -82,7 +86,7 @@ function UserTable() {
           <div className="table-cell">{res.nazwisko}</div>
           <div className="table-cell">{res.email}</div>
           <div className="table-cell">{res.id}</div>
-          <div className="table-cell">{res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate))}</div>
+          <div className="table-cell">{res.cena + calculateAdditionalCost(res.countdown)}</div>
           {/* <div className="table-cell">{calculateOverdueTime(res.exitDate)>0?res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate)):res.cena}</div> */}
           {/* <div className="table-cell">{res.countdown === calculateTimeDifference(res.entryDate, res.exitDate)?res.cena : res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate))}</div>
            */}
@@ -94,7 +98,7 @@ function UserTable() {
                 <button onClick={() => handleStop(res.id, res.exitDate)}>STOP</button>
               </div>
             ) : (
-              res.remainingTime <= 0 ? (
+              res.remainingTime <= 0 && Math.floor(calculateTimeDifference(res.entryDate, res.exitDate)) > res.countdown? (
                 <>
                   Przekroczono czas o {Math.floor(calculateOverdueTime(res.exitDate) / 3600)}h {Math.floor((calculateOverdueTime(res.exitDate) % 3600) / 60)}m {Math.floor(calculateOverdueTime(res.exitDate) % 60)}s
                 </>
