@@ -39,10 +39,9 @@ function UserTable() {
     return overdueTime > 0 ? overdueTime : 0;
   };
 
-  const calculateAdditionalCost = (exitDate) => {
-    const overdueTime = (new Date(exitDate).getTime()-Date.now()) / 1000;
-    console.log(overdueTime);
-    if (overdueTime > 0) {
+  const calculateAdditionalCost = (remainingTime, exitDate) => {
+    const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
+    if (remainingTime < 0) {
       const overtimeMinutes = Math.ceil(overdueTime / 60);
       const costPerMinute = 1; // Adjust this as needed for specific cost calculations
       return overtimeMinutes * costPerMinute;
@@ -89,7 +88,7 @@ function UserTable() {
           <div className="table-cell">{res.email}</div>
           <div className="table-cell">{res.id}</div>
           <div className="table-cell">
-            {res.cena + (res.exitDate ? calculateAdditionalCost(res.exitDate) : 0)}
+            {res.cena + (res.exitDate ? calculateAdditionalCost(res.remainingTime, res.exitDate) : 0)}
           </div>
           <div className="table-cell">
             {!res.exitDate ? (
