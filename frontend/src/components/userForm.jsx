@@ -47,7 +47,7 @@ function UserForm() {
         <select onChange={handleTimeRangeChange}>
           <option value="-">-</option>
           {dataPrice.map(res => (
-            <option key={res.czas} value={res.czas}>{res.czas}</option>
+            <option key={res.timeRange} value={res.timeRange}>{res.timeRange}</option>
           ))}
         </select>
       </div>
