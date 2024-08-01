@@ -6,7 +6,7 @@ import { useFormService } from '../services/useFormService';
 
 function UserTable() {
   const { data, handleGetData } = useGetData();
-  const { handleStopCountdown } = useFormService();  // Import handleStopCountdown
+  const { handleStopCountdown, isStopped } = useFormService();  // Import handleStopCountdown and isStopped
 
   const deleteUser = async (userId) => {
     try {
@@ -56,7 +56,13 @@ function UserTable() {
           <div className="table-cell">{res.nazwisko}</div>
           <div className="table-cell">{res.email}</div>
           <div className="table-cell">{res.id}</div>
-          <div className="table-cell">{res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate))}</div>
+          <div className="table-cell">
+            {isStopped ? (
+              res.cena // Display the cost as is if stopped
+            ) : (
+              res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate))
+            )}
+          </div>
           <div className="table-cell">
             {!res.exitDate ? (
               <div>

@@ -9,6 +9,7 @@ export function useFormService() {
   const [cena, setCena] = useState('');
   const [countdown, setCountdown] = useState('');
   const [postData, setPostData] = useState({});
+  const [isStopped, setIsStopped] = useState(false); // Track if the countdown is stopped
 
   useEffect(() => {
     setPostData({ imie, nazwisko, email, id, countdown, cena });
@@ -49,12 +50,13 @@ export function useFormService() {
   }, []);
 
   const handleStopCountdown = useCallback((userId, exitDate) => {
+    setIsStopped(true); // Set countdown as stopped
     const overdueTime = calculateOverdueTime(exitDate);
     const additionalCost = calculateAdditionalCost(overdueTime);
     updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
   }, [updateExpirationStatus]);
 
   return {
-    imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, cena, setCena, countdown, setCountdown, handleSendData, handleStopCountdown
+    imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, cena, setCena, countdown, setCountdown, handleSendData, handleStopCountdown, isStopped
   };
 }
