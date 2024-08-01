@@ -23,7 +23,7 @@ function UserForm() {
   const handleTimeRangeChange = (e) => {
     const selectedTimeRange = e.target.value;
     setCountdown(selectedTimeRange);
-    const selectedPrice = dataPrice.find(res => res.czas === selectedTimeRange)?.cena || '';
+    const selectedPrice = dataPrice.find(res => res.timeRange === selectedTimeRange)?.cena || '';
     setCena(selectedPrice);
   };
 
