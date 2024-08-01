@@ -23,7 +23,7 @@ function UserTable() {
       setCurrentTime(Date.now());
     }, 1000);
     if(localStorage.getItem('getID')){
-      handleStop(localStorage.getItem('getID'),currentTime);
+      handleStop(localStorage.getItem('getID'),Date.now());
     }
 
     return () => clearInterval(interval);
