@@ -1,9 +1,11 @@
-import '../style/userForm.css';
+// src/components/UserForm.js
+
 import { useFormService } from '../services/useFormService';
 import { useGetPrice } from '../services/useGetPrice';
 import { useAdminService } from '../services/useAdminService';
 import { useEffect } from 'react';
-import UserTable from './userTable';
+import UserTable from './UserTable';
+import '../style/userForm.css';
 
 function UserForm() {
   const { imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, cena, setCena, countdown, setCountdown, handleSendData, handleStopCountdown } = useFormService();

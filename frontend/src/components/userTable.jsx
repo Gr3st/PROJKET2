@@ -1,12 +1,14 @@
-import '../style/userForm.css';
+// src/components/UserTable.js
+
 import axios from 'axios';
 import { useGetData } from '../services/useGetData';
-import { useEffect } from 'react';
 import { useFormService } from '../services/useFormService';
+import { useEffect } from 'react';
+import '../style/userForm.css';
 
 function UserTable() {
   const { data, handleGetData } = useGetData();
-  const { handleStopCountdown, isStopped } = useFormService();  // Import handleStopCountdown and isStopped
+  const { handleStopCountdown } = useFormService();
 
   const deleteUser = async (userId) => {
     try {
@@ -29,7 +31,7 @@ function UserTable() {
 
   const calculateAdditionalCost = (overdueTime) => {
     const overtimeMinutes = Math.ceil(overdueTime / 60);
-    return Math.floor(overtimeMinutes / 1); // Adjust this as needed for specific cost calculations
+    return Math.floor(overtimeMinutes / 1);
   };
 
   const calculateTimeDifference = (entryDate, exitDate) => {
@@ -56,13 +58,7 @@ function UserTable() {
           <div className="table-cell">{res.nazwisko}</div>
           <div className="table-cell">{res.email}</div>
           <div className="table-cell">{res.id}</div>
-          <div className="table-cell">
-            {isStopped ? (
-              res.cena // Display the cost as is if stopped
-            ) : (
-              res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate))
-            )}
-          </div>
+          <div className="table-cell">{res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate))}</div>
           <div className="table-cell">
             {!res.exitDate ? (
               <div>
@@ -72,11 +68,7 @@ function UserTable() {
             ) : (
               res.remainingTime <= 0 ? (
                 <>
-                  {isStopped ? (
-                    `Czas zatrzymany`
-                  ) : (
-                    `Przekroczono czas o ${Math.floor(calculateOverdueTime(res.exitDate) / 3600)}h ${Math.floor((calculateOverdueTime(res.exitDate) % 3600) / 60)}m ${Math.floor(calculateOverdueTime(res.exitDate) % 60)}s`
-                  )}
+                  Przekroczono czas o {Math.floor(calculateOverdueTime(res.exitDate) / 3600)}h {Math.floor((calculateOverdueTime(res.exitDate) % 3600) / 60)}m {Math.floor(calculateOverdueTime(res.exitDate) % 60)}s
                 </>
               ) : (
                 <>{Math.floor(calculateTimeDifference(res.entryDate, res.exitDate) / 3600)}h {Math.floor((calculateTimeDifference(res.entryDate, res.exitDate) % 3600) / 60)}m {Math.floor(calculateTimeDifference(res.entryDate, res.exitDate) % 60)}s</>

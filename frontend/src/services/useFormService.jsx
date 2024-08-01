@@ -1,3 +1,5 @@
+// src/services/useFormService.js
+
 import axios from 'axios';
 import { useEffect, useState, useCallback } from 'react';
 
@@ -9,7 +11,7 @@ export function useFormService() {
   const [cena, setCena] = useState('');
   const [countdown, setCountdown] = useState('');
   const [postData, setPostData] = useState({});
-  const [isStopped, setIsStopped] = useState(false); // Track if the countdown is stopped
+  const [isStopped, setIsStopped] = useState(false);
 
   useEffect(() => {
     setPostData({ imie, nazwisko, email, id, countdown, cena });
@@ -26,6 +28,7 @@ export function useFormService() {
       setId('');
       setCountdown('');
       setCena('');
+      setIsStopped(false);
     } catch (err) {
       console.error('Error sending message:', err);
     }
@@ -38,7 +41,7 @@ export function useFormService() {
 
   const calculateAdditionalCost = (overdueTime) => {
     const overtimeMinutes = Math.ceil(overdueTime / 60);
-    return Math.floor(overtimeMinutes / 1); // Adjust this as needed for specific cost calculations
+    return Math.floor(overtimeMinutes / 1);
   };
 
   const updateExpirationStatus = useCallback(async (userId, exitDate, elapsedTime, additionalCost) => {
@@ -50,13 +53,15 @@ export function useFormService() {
   }, []);
 
   const handleStopCountdown = useCallback((userId, exitDate) => {
-    setIsStopped(true); // Set countdown as stopped
-    const overdueTime = calculateOverdueTime(exitDate);
-    const additionalCost = calculateAdditionalCost(overdueTime);
-    updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
-  }, [updateExpirationStatus]);
+    if (!isStopped) {
+      const overdueTime = calculateOverdueTime(exitDate);
+      const additionalCost = calculateAdditionalCost(overdueTime);
+      updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
+      setIsStopped(true);
+    }
+  }, [isStopped, updateExpirationStatus]);
 
   return {
-    imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, cena, setCena, countdown, setCountdown, handleSendData, handleStopCountdown, isStopped
+    imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, cena, setCena, countdown, setCountdown, handleSendData, handleStopCountdown
   };
 }
