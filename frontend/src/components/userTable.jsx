@@ -25,6 +25,21 @@ function UserTable() {
     return () => clearInterval(interval);
   }, [handleGetData]);
 
+  const calculateOverdueTime = (exitDate) => {
+    const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
+    return overdueTime > 0 ? overdueTime : 0;
+  };
+
+  const calculateAdditionalCost = useCallback((remainingTime, exitDate) => {
+    const overdueTime = calculateOverdueTime(exitDate);
+    if (remainingTime > 0) {
+      return 0;
+    }
+    const overtimeMinutes = Math.ceil(overdueTime / 60);
+    const costPerMinute = 1; // Adjust this as needed for specific cost calculations
+    return overtimeMinutes * costPerMinute;
+  }, []);
+
   const updateExpirationStatus = useCallback(async (userId, exitDate, elapsedTime, additionalCost) => {
     try {
       await axios.put(`https://projket2.onrender.com/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
@@ -34,28 +49,11 @@ function UserTable() {
     }
   }, [handleGetData]);
 
-  const calculateOverdueTime = (exitDate) => {
-    const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
-    return overdueTime > 0 ? overdueTime : 0;
-  };
-
-  const calculateAdditionalCost = (remainingTime, exitDate) => {
-    const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
-    console.log(remainingTime);
-    if (remainingTime > 0) {
-      return 0;
-    }
-    const overtimeMinutes = Math.ceil(overdueTime / 60);
-    const costPerMinute = 1; // Adjust this as needed for specific cost calculations
-    return overtimeMinutes * costPerMinute;
-    
-  };
-
   const handleStop = useCallback((userId, exitDate) => {
     const overdueTime = calculateOverdueTime(exitDate);
     const additionalCost = calculateAdditionalCost(0, exitDate); // remainingTime is already < 0 in this case
     updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
-  }, [updateExpirationStatus]);
+  }, [updateExpirationStatus, calculateAdditionalCost]);
 
   useEffect(() => {
     data.forEach(res => {
