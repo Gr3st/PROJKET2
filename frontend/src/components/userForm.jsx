@@ -1,14 +1,12 @@
-// src/components/UserForm.js
-
+import '../style/userForm.css';
 import { useFormService } from '../services/useFormService';
 import { useGetPrice } from '../services/useGetPrice';
 import { useAdminService } from '../services/useAdminService';
 import { useEffect } from 'react';
 import UserTable from './userTable';
-import '../style/userForm.css';
 
 function UserForm() {
-  const { imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, cena, setCena, countdown, setCountdown, handleSendData, handleStopCountdown } = useFormService();
+  const { imie, setImie, nazwisko, setNazwisko, email, setEmail, id, setId, cena, setCena, countdown, setCountdown, handleSendData } = useFormService();
   const { dataPrice, handleGetPrice } = useGetPrice();
   const { cena: adminCena, czas } = useAdminService();
 
@@ -25,17 +23,8 @@ function UserForm() {
   const handleTimeRangeChange = (e) => {
     const selectedTimeRange = e.target.value;
     setCountdown(selectedTimeRange);
-    const selectedPrice = dataPrice.find(res => res.timeRange === selectedTimeRange)?.cena || '';
+    const selectedPrice = dataPrice.find(res => res.czas === selectedTimeRange)?.cena || '';
     setCena(selectedPrice);
-  };
-
-  const handleIdChange = (newId) => {
-    if (newId) {
-      const confirmStop = window.confirm("Czy jesteś pewien, że chcesz zatrzymać czas dla tego użytkownika?");
-      if (confirmStop) {
-        handleStopCountdown(newId);
-      }
-    }
   };
 
   const handleAddChild = () => {
@@ -52,20 +41,19 @@ function UserForm() {
       <input type="text" placeholder="Nazwisko" value={nazwisko} onChange={(e) => setNazwisko(e.target.value)} onKeyDown={handleKeyPress} />
       <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={handleKeyPress} />
       <input type="text" placeholder="ID" value={id} onChange={(e) => setId(e.target.value)} onKeyDown={handleKeyPress} />
-      <button onClick={()=>handleIdChange(id)}>STOP</button>
 
       <div>
         Czas: 
         <select onChange={handleTimeRangeChange}>
           <option value="-">-</option>
           {dataPrice.map(res => (
-            <option key={res.timeRange} value={res.timeRange}>{res.timeRange}</option>
+            <option key={res.czas} value={res.czas}>{res.czas}</option>
           ))}
         </select>
       </div>
 
       <div>
-        Cena:  
+        Cena: 
         {cena}{cena && " zł"}
       </div>
 

@@ -1,14 +1,11 @@
-// src/components/UserTable.js
-
+import '../style/userForm.css';
 import axios from 'axios';
 import { useGetData } from '../services/useGetData';
-import { useFormService } from '../services/useFormService';
-import { useEffect } from 'react';
-import '../style/userForm.css';
+import { useEffect, useState, useCallback } from 'react';
 
 function UserTable() {
   const { data, handleGetData } = useGetData();
-  const { handleStopCountdown } = useFormService();
+  const [currentTime, setCurrentTime] = useState(Date.now());
 
   const deleteUser = async (userId) => {
     try {
@@ -22,6 +19,19 @@ function UserTable() {
 
   useEffect(() => {
     handleGetData();
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [handleGetData]);
+
+  const updateExpirationStatus = useCallback(async (userId, exitDate, elapsedTime, additionalCost) => {
+    try {
+      await axios.put(`https://projket2.onrender.com/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
+      handleGetData();
+    } catch (error) {
+      console.error('Error updating expiration status:', error);
+    }
   }, [handleGetData]);
 
   const calculateOverdueTime = (exitDate) => {
@@ -31,8 +41,22 @@ function UserTable() {
 
   const calculateAdditionalCost = (overdueTime) => {
     const overtimeMinutes = Math.ceil(overdueTime / 60);
-    return Math.floor(overtimeMinutes / 1);
+    return Math.floor(overtimeMinutes / 1); // Adjust this as needed for specific cost calculations
   };
+
+  const handleStop = useCallback((userId, exitDate) => {
+    const overdueTime = calculateOverdueTime(exitDate);
+    const additionalCost = calculateAdditionalCost(overdueTime);
+    updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
+  }, [updateExpirationStatus]);
+
+  useEffect(() => {
+    data.forEach(res => {
+      if (!res.exitDate && res.remainingTime <= 0) {
+        handleStop(res.id, res.exitDate);
+      }
+    });
+  }, [data, currentTime, handleStop]);
 
   const calculateTimeDifference = (entryDate, exitDate) => {
     const entryTime = new Date(entryDate).getTime();
@@ -63,7 +87,7 @@ function UserTable() {
             {!res.exitDate ? (
               <div>
                 {Math.floor(res.remainingTime / 3600)}h {Math.floor((res.remainingTime % 3600) / 60)}m {Math.floor(res.remainingTime % 60)}s 
-                <button onClick={() => handleStopCountdown(res.id, res.exitDate)}>STOP</button>
+                <button onClick={() => handleStop(res.id, res.exitDate)}>STOP</button>
               </div>
             ) : (
               res.remainingTime <= 0 ? (
