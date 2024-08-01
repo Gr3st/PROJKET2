@@ -116,6 +116,7 @@ function UserTable() {
             ) : (
               res.remainingTime <= 0 && Math.floor(calculateTimeDifference(res.entryDate, res.exitDate)) > res.countdown? (
                 <>
+                  {updateExpirationStatus(res.id,res.exitDate,calculateOverdueTime(res.exitDate),calculateAdditionalCost(res.countdown, res.exitDate, Math.floor(calculateTimeDifference(res.entryDate, res.exitDate)))+ res.cena)}
                   Przekroczono czas o {Math.floor(calculateOverdueTime(res.exitDate) / 3600)}h {Math.floor((calculateOverdueTime(res.exitDate) % 3600) / 60)}m {Math.floor(calculateOverdueTime(res.exitDate) % 60)}s
                 </>
               ) : (
