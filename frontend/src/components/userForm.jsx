@@ -4,7 +4,7 @@ import { useFormService } from '../services/useFormService';
 import { useGetPrice } from '../services/useGetPrice';
 import { useAdminService } from '../services/useAdminService';
 import { useEffect } from 'react';
-import UserTable from './UserTable';
+import UserTable from './userTable';
 import '../style/userForm.css';
 
 function UserForm() {
