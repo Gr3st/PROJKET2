@@ -59,7 +59,7 @@ exports.data = async (req, res) => {
             const elapsedTime = (currentTime - new Date(user.entryDate).getTime()) / 1000;
             let remainingTime;
 
-            if (Math.floor((new Date(user.exitDate).getTime() - new Date(user.entryDate).getTime()) / 1000) === user.countdown) {
+            if (Math.floor((new Date(user.exitDate).getTime() - new Date(user.entryDate).getTime()) / 1000) <= user.countdown) {
                 remainingTime = 1;
             } else {
                 remainingTime = Math.max(user.countdown - elapsedTime, 0);
