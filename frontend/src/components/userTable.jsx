@@ -82,7 +82,10 @@ function UserTable() {
           <div className="table-cell">{res.nazwisko}</div>
           <div className="table-cell">{res.email}</div>
           <div className="table-cell">{res.id}</div>
-          <div className="table-cell">{calculateOverdueTime(res.exitDate)>0?res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate)):res.cena}</div>
+      
+          {/* <div className="table-cell">{calculateOverdueTime(res.exitDate)>0?res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate)):res.cena}</div> */}
+          <div className="table-cell">{res.countdown === (calculateTimeDifference(res.entryDate, res.exitDate)?res.cena : res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate))}</div>
+          
           <div className="table-cell">
             {!res.exitDate ? (
               <div>
