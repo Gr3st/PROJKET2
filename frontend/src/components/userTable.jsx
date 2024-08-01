@@ -99,7 +99,7 @@ function UserTable() {
             ) : (
               res.remainingTime <= 0 ? (
                 <>
-                  {console.log(Math.floor((new Date(res.exitDate).getTime() - new Date(res.entryDate).getTime()) / 1000) === res.countdown+" cd"+res.countdown+" mth:"+Math.floor((new Date(res.exitDate).getTime() - new Date(res.entryDate).getTime()) / 1000))}
+                  {console.log(" cd"+res.countdown+" mth:"+Math.floor((new Date(res.exitDate).getTime() - new Date(res.entryDate).getTime()) / 1000))}
                   Przekroczono czas o {Math.floor(calculateOverdueTime(res.exitDate) / 3600)}h {Math.floor((calculateOverdueTime(res.exitDate) % 3600) / 60)}m {Math.floor(calculateOverdueTime(res.exitDate) % 60)}s
                 </>
               ) : (
