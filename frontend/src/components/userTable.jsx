@@ -87,6 +87,7 @@ function UserTable() {
           {/* <div className="table-cell">{res.countdown === calculateTimeDifference(res.entryDate, res.exitDate)?res.cena : res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate))}</div>
            */}
           <div className="table-cell">
+            {console.log(Math.floor(calculateTimeDifference(res.entryDate, res.exitDate))+" cd"+res.countdown)}
             {!res.exitDate ? (
               <div>
                 {Math.floor(res.remainingTime / 3600)}h {Math.floor((res.remainingTime % 3600) / 60)}m {Math.floor(res.remainingTime % 60)}s 
