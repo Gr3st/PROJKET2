@@ -27,7 +27,7 @@ function UserTable() {
     }
 
     return () => clearInterval(interval);
-  }, [handleGetData]);
+  }, [handleGetData,handleStop]);
 
   const updateExpirationStatus = useCallback(async (userId, exitDate, elapsedTime, additionalCost) => {
     try {
