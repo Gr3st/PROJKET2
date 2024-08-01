@@ -40,7 +40,7 @@ function UserTable() {
   };
 
   const calculateAdditionalCost = (remainingTime, exitDate) => {
-    const overdueTime = calculateOverdueTime(exitDate);
+    const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
     console.log(remainingTime);
     if (remainingTime > 0) {
       return 0;
