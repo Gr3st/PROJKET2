@@ -1,4 +1,3 @@
-// File path: src/components/UserTable.js
 import '../style/userForm.css';
 import axios from 'axios';
 import { useGetData } from '../services/useGetData';
@@ -18,6 +17,15 @@ function UserTable() {
     }
   };
 
+  useEffect(() => {
+    handleGetData();
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [handleGetData]);
+
   const updateExpirationStatus = useCallback(async (userId, exitDate, elapsedTime, additionalCost) => {
     try {
       await axios.put(`https://projket2.onrender.com/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
@@ -34,13 +42,15 @@ function UserTable() {
 
   const calculateAdditionalCost = (countdown, exitDate, check) => {
     const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
-    if (check < countdown) {
+    if(check<countdown){
       return 0;
     }
     const overtimeMinutes = Math.ceil(overdueTime / 60);
-    const costPerMinute = 0.5;
+    // return Math.floor(overtimeMinutes===1?overtimeMinutes / 1: overtimeMinutes/5); 
+    // const overtimeMinutes = Math.ceil(overdueTime / 60);
+    const costPerMinute = 0.5; // Adjust this as needed for specific cost calculations
     const costPer5Minute = 1.5;
-    return overtimeMinutes === 1 ? overtimeMinutes * costPerMinute : overtimeMinutes * costPer5Minute;
+    return overtimeMinutes===1?overtimeMinutes * costPerMinute:overtimeMinutes * costPer5Minute;
   };
 
   const handleStop = useCallback((userId, exitDate) => {
@@ -48,21 +58,6 @@ function UserTable() {
     const additionalCost = calculateAdditionalCost(overdueTime);
     updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
   }, [updateExpirationStatus]);
-
-  useEffect(() => {
-    handleGetData();
-    const interval = setInterval(() => {
-      setCurrentTime(Date.now());
-    }, 1000);
-
-    const storedUserId = localStorage.getItem('stopID');
-    if (storedUserId) {
-      handleStop(storedUserId, currentTime);
-      localStorage.removeItem('stopID');
-    }
-
-    return () => clearInterval(interval);
-  }, [handleGetData, currentTime, handleStop]);
 
   useEffect(() => {
     data.forEach(res => {
@@ -96,17 +91,19 @@ function UserTable() {
           <div className="table-cell">{res.nazwisko}</div>
           <div className="table-cell">{res.email}</div>
           <div className="table-cell">{res.id}</div>
+          <div className="table-cell">{res.exitDate?calculateAdditionalCost(res.countdown, res.exitDate, Math.floor(calculateTimeDifference(res.entryDate, res.exitDate)))+ res.cena: res.cena}</div>
+          {/* <div className="table-cell">{calculateOverdueTime(res.exitDate)>0?res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate)):res.cena}</div> */}
+          {/* <div className="table-cell">{res.countdown === calculateTimeDifference(res.entryDate, res.exitDate)?res.cena : res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate))}</div>
+           */}
           <div className="table-cell">
-            {res.exitDate ? calculateAdditionalCost(res.countdown, res.exitDate, Math.floor(calculateTimeDifference(res.entryDate, res.exitDate))) + res.cena : res.cena}
-          </div>
-          <div className="table-cell">
+            {console.log(Math.floor(calculateTimeDifference(res.entryDate, res.exitDate))+" cd"+res.countdown)}
             {!res.exitDate ? (
               <div>
                 {Math.floor(res.remainingTime / 3600)}h {Math.floor((res.remainingTime % 3600) / 60)}m {Math.floor(res.remainingTime % 60)}s 
                 <button onClick={() => handleStop(res.id, res.exitDate)}>STOP</button>
               </div>
             ) : (
-              res.remainingTime <= 0 && Math.floor(calculateTimeDifference(res.entryDate, res.exitDate)) > res.countdown ? (
+              res.remainingTime <= 0 && Math.floor(calculateTimeDifference(res.entryDate, res.exitDate)) > res.countdown? (
                 <>
                   Przekroczono czas o {Math.floor(calculateOverdueTime(res.exitDate) / 3600)}h {Math.floor((calculateOverdueTime(res.exitDate) % 3600) / 60)}m {Math.floor(calculateOverdueTime(res.exitDate) % 60)}s
                 </>
