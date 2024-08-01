@@ -45,7 +45,11 @@ function UserTable() {
       return 0;
     }
     const overtimeMinutes = Math.ceil(overdueTime / 60);
-    return Math.floor(overtimeMinutes / 1); // Adjust this as needed for specific cost calculations
+    // return Math.floor(overtimeMinutes===1?overtimeMinutes / 1: overtimeMinutes/5); 
+    // const overtimeMinutes = Math.ceil(overdueTime / 60);
+    const costPerMinute = 0.5; // Adjust this as needed for specific cost calculations
+    const costPer5Minute = 1.5;
+    return overtimeMinutes===1?overtimeMinutes * costPerMinute:overtimeMinutes * costPer5Minute;
   };
 
   const handleStop = useCallback((userId, exitDate) => {
