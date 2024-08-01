@@ -1,7 +1,7 @@
 import '../style/userForm.css';
 import axios from 'axios';
 import { useGetData } from '../services/useGetData';
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 function UserTable() {
   const { data, handleGetData } = useGetData();
@@ -9,11 +9,11 @@ function UserTable() {
 
   const deleteUser = async (userId) => {
     try {
-      await axios.delete(`https://projket2.onrender.com/user/${userId}`);
+      const response = await axios.delete(`https://projket2.onrender.com/user/${userId}`);
+      console.log('User deleted:', response.data);
       handleGetData();
     } catch (error) {
       console.error('Error deleting user:', error);
-      alert('Error deleting user');
     }
   };
 
@@ -31,7 +31,6 @@ function UserTable() {
       handleGetData();
     } catch (error) {
       console.error('Error updating expiration status:', error);
-      alert('Error updating expiration status');
     }
   }, [handleGetData]);
 
@@ -83,7 +82,7 @@ function UserTable() {
           <div className="table-cell">{res.nazwisko}</div>
           <div className="table-cell">{res.email}</div>
           <div className="table-cell">{res.id}</div>
-          <div className="table-cell">{res.cena + (calculateOverdueTime(res.exitDate) > 0 ? calculateAdditionalCost(calculateOverdueTime(res.exitDate)) : 0)}</div>
+          <div className="table-cell">{calculateOverdueTime(res.exitDate)>0?res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate)):res.cena}</div>
           <div className="table-cell">
             {!res.exitDate ? (
               <div>
