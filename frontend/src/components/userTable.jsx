@@ -6,7 +6,6 @@ import { useEffect, useState, useCallback } from 'react';
 function UserTable() {
   const { data, handleGetData } = useGetData();
   const [currentTime, setCurrentTime] = useState(Date.now());
-  const [localID, setLocalID] = useState(null);
 
   const deleteUser = async (userId) => {
     try {
@@ -18,6 +17,18 @@ function UserTable() {
     }
   };
 
+  useEffect(() => {
+    handleGetData();
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 1000);
+    if(localStorage.getItem('getID')){
+      handleStop(localStorage.getItem('getID'),currentTime);
+    }
+
+    return () => clearInterval(interval);
+  }, [handleGetData]);
+
   const updateExpirationStatus = useCallback(async (userId, exitDate, elapsedTime, additionalCost) => {
     try {
       await axios.put(`https://projket2.onrender.com/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
@@ -26,31 +37,6 @@ function UserTable() {
       console.error('Error updating expiration status:', error);
     }
   }, [handleGetData]);
-
-  const handleStop = useCallback((userId, exitDate) => {
-    const overdueTime = calculateOverdueTime(exitDate);
-    const additionalCost = calculateAdditionalCost(overdueTime);
-    updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
-  }, [updateExpirationStatus]);
-
-  useEffect(() => {
-    handleGetData();
-    const interval = setInterval(() => {
-      setCurrentTime(Date.now());
-    }, 1000);
-    const storedId = localStorage.getItem('getID');
-    if (storedId) {
-      setLocalID(storedId);
-    }
-    return () => clearInterval(interval);
-  }, [handleGetData]);
-
-  useEffect(()=>{
-    if(localID){
-      handleStop(localID,Date.now());
-      localStorage.removeItem('getID');
-    }
-  },[localID,handleStop])
 
   const calculateOverdueTime = (exitDate) => {
     const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
@@ -69,6 +55,12 @@ function UserTable() {
     const costPer5Minute = 1.5;
     return overtimeMinutes===1?overtimeMinutes * costPerMinute:overtimeMinutes * costPer5Minute;
   };
+
+  const handleStop = useCallback((userId, exitDate) => {
+    const overdueTime = calculateOverdueTime(exitDate);
+    const additionalCost = calculateAdditionalCost(overdueTime);
+    updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
+  }, [updateExpirationStatus]);
 
   useEffect(() => {
     data.forEach(res => {
