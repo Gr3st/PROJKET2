@@ -82,12 +82,24 @@ function UserTable() {
     return timeDifference;
   };
 
-  const filteredData = search
-    ? data.filter(res => 
-        uid?res.id===uid:res.id.toString().includes(search.toString()) || res.imie.toUpperCase().includes(search.toUpperCase())
-      )
-    : data;
-
+  const filteredData = data.filter(user => {
+    // If a search term is present
+    if (search) {
+      // If `uid` is provided, filter by `uid` only
+      if (uid) {
+        return user.id === uid;
+      }
+      // Otherwise, filter by search term
+      return user.id.toString().includes(search.toString()) || user.imie.toUpperCase().includes(search.toUpperCase());
+    }
+    // If no search term is provided, but `uid` is provided
+    if (uid) {
+      return user.id === uid;
+    }
+    // Return all data if no search term and no `uid`
+    return true;
+  });
+  
   return (
     <div className="user-table">
       <div className="table-header">
