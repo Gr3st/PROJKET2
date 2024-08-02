@@ -43,7 +43,7 @@ export function useAdminService() {
       formatCell(user.nazwisko || ''),
       formatCell(user.email || ''),
       formatCell(user.id || ''),
-      formatCell(Math.floor((new Date(user.exitDate).getTime() - new Date(user.entryDate).getTime()) / 1000)>=user.countdown?Math.ceil((((Date.now() - new Date(user.exitDate).getTime())/1000)/60)*1.5):`${user.cena}zł`),
+      formatCell(Math.floor((new Date(user.exitDate).getTime() - new Date(user.entryDate).getTime()) / 1000)>=user.countdown?`${Math.ceil((((Date.now() - new Date(user.exitDate).getTime())/1000)/60)*1.5)}zl`:`${user.cena}zl`),
       formatCell(user.entryDate ? new Date(user.entryDate).toLocaleDateString() : ''),
       formatCell(user.exitDate ? new Date(user.exitDate).toLocaleDateString() : ''),
       formatCell(user.countdown || ''),
