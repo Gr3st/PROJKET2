@@ -35,6 +35,12 @@ function UserTable() {
       console.error('Error updating expiration status:', error);
     }
   }, [data, handleGetData]);
+
+  const calculateOverdueTime = (exitDate) => {
+    const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
+    return overdueTime > 0 ? overdueTime : 0;
+  };
+
   const calculateAdditionalCost = (exitDate, countdown, check) => {
     const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
     if (check < countdown) {
