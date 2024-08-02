@@ -6,6 +6,7 @@ import { useEffect, useState, useCallback } from 'react';
 function UserTable() {
   const { data, handleGetData } = useGetData();
   const [currentTime, setCurrentTime] = useState(Date.now());
+  const [search, setSearch] = useState('');
 
   const deleteUser = async (userId) => {
     try {
@@ -76,6 +77,11 @@ function UserTable() {
   return (
     <div className="user-table">
       <div className="table-header">
+        <div className="column-header">
+          <input type='text' onChange={(e)=>setSearch(e.target.value)} placeholder='search...'></input>
+        </div>
+      </div>
+      <div className="table-header">
         <div className="column-header">IMIE</div>
         <div className="column-header">NAZWISKO</div>
         <div className="column-header">EMAIL</div>
@@ -84,7 +90,7 @@ function UserTable() {
         <div className="column-header">CZAS</div>
         <div className="column-header">Akcje</div>
       </div>
-      {data.map(res => (
+      {data.filter(res=>res.id===search||res.imie.toUpperCase()===search.toUpperCase()).map(res => (
         <div className="table-row" key={res.id}>
           <div className="table-cell">{res.imie}</div>
           <div className="table-cell">{res.nazwisko}</div>
