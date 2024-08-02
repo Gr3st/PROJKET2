@@ -42,6 +42,7 @@ function UserTable() {
     const overtimeMinutes = Math.ceil(overdueTime / 60);
     const costPerMinute = 0.5;
     const costPer5Minute = 1.5;
+    handleAdditionalCostChange(countdown, exitDate, check);
     return overtimeMinutes === 1 ? overtimeMinutes * costPerMinute : overtimeMinutes * costPer5Minute;
   };
 
