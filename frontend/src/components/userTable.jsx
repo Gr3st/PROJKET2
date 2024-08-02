@@ -45,8 +45,8 @@ function UserTable() {
 
   const handleStop = useCallback((userId, exitDate) => {
     const overdueTime = calculateOverdueTime(exitDate);
-    const additionalCost = calculateAdditionalCost(exitDate, overdueTime);
-    console.log(additionalCost);
+    const countdown = data.find(res=>res.id===userId).countdown;
+    const additionalCost = calculateAdditionalCost(exitDate, overdueTime, countdown);
     updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
   }, [updateExpirationStatus]);
 
