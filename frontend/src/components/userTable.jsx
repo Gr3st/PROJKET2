@@ -7,7 +7,7 @@ function UserTable() {
   const { data, handleGetData } = useGetData();
   const [currentTime, setCurrentTime] = useState(Date.now());
   const [search, setSearch] = useState('');
-  // const [uid, setUID] = useState(null);
+  const [uid, setUID] = useState(false);
 
   const deleteUser = async (userId) => {
     try {
@@ -84,9 +84,14 @@ function UserTable() {
 
   const filteredData = search
     ? data.filter(res => 
-      res.id === parseInt(search)?res.id === parseInt(search):res.id.toString().includes(search.toString()) || res.imie.toUpperCase().includes(search.toUpperCase())
+      res.id.toString().includes(search.toString()) || res.imie.toUpperCase().includes(search.toUpperCase())
       )
     : data;
+  const filteredDataID = search
+  ? data.filter(res => 
+    res.id === parseInt(search)
+    )
+  : data;
 
   return (
     <div className="user-table">
@@ -110,8 +115,8 @@ function UserTable() {
         <div className="column-header">CZAS</div>
         <div className="column-header">Akcje</div>
       </div>
-      {filteredData.map(res => (
-        <div className="table-row" key={res.id} onClick={()=>setSearch(res.id)}>
+      {uid?filteredDataID:filteredData.map(res => (
+        <div className="table-row" key={res.id} onClick={()=>{setSearch(res.id);setUID(!uid)}}>
           <div className="table-cell">{res.imie}</div>
           <div className="table-cell">{res.nazwisko}</div>
           <div className="table-cell">{res.email}</div>
