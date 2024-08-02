@@ -112,7 +112,7 @@ function UserTable() {
         <div className="column-header">Akcje</div>
       </div>
       {filteredData.map(res => (
-        <div className="table-row" key={res.id} onClick={() => { setClickedId(res.id); setIsRowClicked(!isRowClicked); }}>
+        <div className="table-row" key={res.id} onClick={() => { setClickedId(res.id); setIsRowClicked(!isRowClicked); setSearch(res.id)}}>
           <div className="table-cell">{res.imie}</div>
           <div className="table-cell">{res.nazwisko}</div>
           <div className="table-cell">{res.email}</div>
