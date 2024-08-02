@@ -7,6 +7,7 @@ import { useEffect, useState, useCallback } from 'react';
 function UserTable() {
   const { data, handleGetData } = useGetData();
   const [currentTime, setCurrentTime] = useState(Date.now());
+  const [previousAdditionalCosts, setPreviousAdditionalCosts] = useState({});
 
   const deleteUser = async (userId) => {
     try {
