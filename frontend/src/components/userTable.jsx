@@ -7,7 +7,7 @@ import { useEffect, useState, useCallback } from 'react';
 function UserTable() {
   const { data, handleGetData } = useGetData();
   const [currentTime, setCurrentTime] = useState(Date.now());
-  const [previousAdditionalCosts, setPreviousAdditionalCosts] = useState({});
+  const [prevAdditionalCost, setPrevAdditionalCost] = useState({});
 
   const deleteUser = async (userId) => {
     try {
@@ -21,21 +21,12 @@ function UserTable() {
 
   const updateExpirationStatus = useCallback(async (userId, exitDate, elapsedTime, additionalCost) => {
     try {
-      const user = data.find(user => user.id === userId);
-      const currentAdditionalCost = user ? user.additionalCost : 0;
-
-      if (currentAdditionalCost !== additionalCost) {
-        await axios.put(`https://projket2.onrender.com/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
-        setPreviousAdditionalCosts(prevCosts => ({
-          ...prevCosts,
-          [userId]: additionalCost,
-        }));
-        handleGetData();
-      }
+      await axios.put(`https://projket2.onrender.com/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
+      handleGetData();
     } catch (error) {
       console.error('Error updating expiration status:', error);
     }
-  }, [data, handleGetData]);
+  }, [handleGetData]);
 
   const calculateOverdueTime = (exitDate) => {
     const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
@@ -55,10 +46,14 @@ function UserTable() {
 
   const handleStop = useCallback((userId, exitDate) => {
     const overdueTime = calculateOverdueTime(exitDate);
-    const countdown = data.find(res=>res.id===userId).countdown;
+    const countdown = data.find(res => res.id === userId).countdown;
     const additionalCost = calculateAdditionalCost(exitDate, overdueTime, countdown);
-    updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
-  }, [updateExpirationStatus,data]);
+
+    if (prevAdditionalCost[userId] !== additionalCost) {
+      updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
+      setPrevAdditionalCost(prevState => ({ ...prevState, [userId]: additionalCost }));
+    }
+  }, [updateExpirationStatus, data, prevAdditionalCost]);
 
   useEffect(() => {
     handleGetData();
