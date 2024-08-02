@@ -32,27 +32,22 @@ function UserTable() {
     return overdueTime > 0 ? overdueTime : 0;
   };
 
-  const calculateAdditionalCost = useCallback((userId, cena, countdown, exitDate, check) => {
+  const calculateAdditionalCost = (countdown, exitDate, check) => {
     const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
     if (check < countdown) {
       return 0;
     }
-    
     const overtimeMinutes = Math.ceil(overdueTime / 60);
     const costPerMinute = 0.5;
     const costPer5Minute = 1.5;
-    const timeAdd = overtimeMinutes === 1 ? overtimeMinutes * costPerMinute + cena: overtimeMinutes * costPer5Minute + cena;
-    console.log(timeAdd);
-    updateExpirationStatus(userId, new Date().toISOString(), check, timeAdd);
     return overtimeMinutes === 1 ? overtimeMinutes * costPerMinute : overtimeMinutes * costPer5Minute;
-  }, [updateExpirationStatus]);
+  };
 
   const handleStop = useCallback((userId, exitDate) => {
     const overdueTime = calculateOverdueTime(exitDate);
-    const additionalCost = calculateAdditionalCost(userId, 0, 0, exitDate, overdueTime); // adjusted parameters for simplicity
-    console.log(additionalCost);
+    const additionalCost = calculateAdditionalCost(overdueTime);
     updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
-  }, [calculateAdditionalCost, updateExpirationStatus]);
+  }, [updateExpirationStatus]);
 
   useEffect(() => {
     handleGetData();
@@ -102,7 +97,7 @@ function UserTable() {
           <div className="table-cell">{res.email}</div>
           <div className="table-cell">{res.id}</div>
           <div className="table-cell">
-            {res.exitDate ? calculateAdditionalCost(res.id, res.cena, res.countdown, res.exitDate, Math.floor(calculateTimeDifference(res.entryDate, res.exitDate))) + res.cena : res.cena}
+            {res.exitDate ? calculateAdditionalCost(res.countdown, res.exitDate, Math.floor(calculateTimeDifference(res.entryDate, res.exitDate))) + res.cena : res.cena}
           </div>
           <div className="table-cell">
             {!res.exitDate ? (
@@ -130,3 +125,4 @@ function UserTable() {
 }
 
 export default UserTable;
+
