@@ -98,7 +98,7 @@ function UserTable() {
             onChange={(e) => setSearch(e.target.value)}
             placeholder='search...'
           />
-          <button onClick={() => handleIdChange(uid)}>STOP</button>
+          <button onClick={() => handleIdChange(search)}>STOP</button>
         </div>
       </div>
       <div className="table-header">
