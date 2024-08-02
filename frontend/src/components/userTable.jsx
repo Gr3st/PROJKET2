@@ -7,7 +7,7 @@ function UserTable() {
   const { data, handleGetData } = useGetData();
   const [currentTime, setCurrentTime] = useState(Date.now());
   const [search, setSearch] = useState('');
-  const [uid, setUID] = useState(null);
+  // const [uid, setUID] = useState(null);
 
   const deleteUser = async (userId) => {
     try {
@@ -82,24 +82,12 @@ function UserTable() {
     return timeDifference;
   };
 
-  const filteredData = data.filter(user => {
-    // If a search term is present
-    if (search) {
-      // If `uid` is provided, filter by `uid` only
-      if (uid) {
-        return user.id === uid;
-      }
-      // Otherwise, filter by search term
-      return user.id.toString().includes(search.toString()) || user.imie.toUpperCase().includes(search.toUpperCase());
-    }
-    // If no search term is provided, but `uid` is provided
-    if (uid) {
-      return user.id === uid;
-    }
-    // Return all data if no search term and no `uid`
-    return true;
-  });
-  
+  const filteredData = search
+    ? data.filter(res => 
+        res.id.toString().includes(search.toString()) || res.imie.toUpperCase().includes(search.toUpperCase())
+      )
+    : data;
+
   return (
     <div className="user-table">
       <div className="table-header">
@@ -123,7 +111,7 @@ function UserTable() {
         <div className="column-header">Akcje</div>
       </div>
       {filteredData.map(res => (
-        <div className="table-row" key={res.id} onClick={()=>setUID(res.id)}>
+        <div className="table-row" key={res.id} onClick={()=>setSearch(res.id)}>
           <div className="table-cell">{res.imie}</div>
           <div className="table-cell">{res.nazwisko}</div>
           <div className="table-cell">{res.email}</div>
