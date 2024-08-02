@@ -87,7 +87,7 @@ function UserTable() {
 
       // If search term is a valid ID and matches the user's ID
       if (user.id === parseInt(search)) {
-        return true;
+        return user.id;
       }
       
       // Check if the ID or the name matches the search term
