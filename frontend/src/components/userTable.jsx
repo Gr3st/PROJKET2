@@ -82,18 +82,12 @@ function UserTable() {
     return timeDifference;
   };
 
-  const filteredData = data.filter(user => {
-    // Check if search term is provided
+  const filteredData = search
+    ? data.filter(res => 
+      res.id === parseInt(search)?res.id === parseInt(search):res.id.toString().includes(search.toString()) || res.imie.toUpperCase().includes(search.toUpperCase())
+      )
+    : data;
 
-      // If search term is a valid ID and matches the user's ID
-      if (user.id === parseInt(search)) {
-        return user.id;
-      }
-      
-      // Check if the ID or the name matches the search term
-      return user.id.toString().includes(search) || 
-             user.imie.toUpperCase().includes(search.toUpperCase());
-    });
   return (
     <div className="user-table">
       <div className="table-header">
