@@ -33,7 +33,7 @@ function UserTable() {
   };
 
   const calculateAdditionalCost = useCallback((userId, cena, countdown, exitDate, check) => {
-    const overdueTime = calculateOverdueTime(exitDate);
+    const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
     if (check < countdown) {
       return 0;
     }
@@ -41,9 +41,9 @@ function UserTable() {
     const overtimeMinutes = Math.ceil(overdueTime / 60);
     const costPerMinute = 0.5;
     const costPer5Minute = 1.5;
-    const timeAdd = overtimeMinutes === 1 ? overtimeMinutes * costPerMinute + cena : overtimeMinutes * costPer5Minute + cena;
-    console.log('Additional cost:', timeAdd);
-    updateExpirationStatus(userId, new Date().toISOString(), overdueTime, timeAdd);
+    const timeAdd = overtimeMinutes === 1 ? overtimeMinutes * costPerMinute + cena: overtimeMinutes * costPer5Minute + cena;
+    console.log(timeAdd);
+    updateExpirationStatus(userId, new Date().toISOString(), check, timeAdd);
     return overtimeMinutes === 1 ? overtimeMinutes * costPerMinute : overtimeMinutes * costPer5Minute;
   }, [updateExpirationStatus]);
 
@@ -87,12 +87,12 @@ function UserTable() {
     <div className="user-table">
       <div className="table-header">
         <div className="column-header">IMIE</div>
-        <div class="column-header">NAZWISKO</div>
-        <div class="column-header">EMAIL</div>
-        <div class="column-header">ID</div>
-        <div class="column-header">CENA</div>
-        <div class="column-header">CZAS</div>
-        <div class="column-header">Akcje</div>
+        <div className="column-header">NAZWISKO</div>
+        <div className="column-header">EMAIL</div>
+        <div className="column-header">ID</div>
+        <div className="column-header">CENA</div>
+        <div className="column-header">CZAS</div>
+        <div className="column-header">Akcje</div>
       </div>
       {data.map(res => (
         <div className="table-row" key={res.id}>
