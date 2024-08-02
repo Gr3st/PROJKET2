@@ -42,6 +42,7 @@ function UserTable() {
     const costPerMinute = 0.5;
     const costPer5Minute = 1.5;
     const timeAdd = overtimeMinutes === 1 ? overtimeMinutes * costPerMinute + cena: overtimeMinutes * costPer5Minute + cena;
+    console.log(timeAdd);
     updateExpirationStatus(userId, exitDate, check, timeAdd);
     return overtimeMinutes === 1 ? overtimeMinutes * costPerMinute : overtimeMinutes * costPer5Minute;
   }, [updateExpirationStatus]);
