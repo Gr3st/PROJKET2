@@ -2,12 +2,11 @@
 import '../style/userForm.css';
 import axios from 'axios';
 import { useGetData } from '../services/useGetData';
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 function UserTable() {
   const { data, handleGetData } = useGetData();
   const [currentTime, setCurrentTime] = useState(Date.now());
-  const additionalCostRef = useRef({});
 
   const deleteUser = async (userId) => {
     try {
@@ -21,8 +20,6 @@ function UserTable() {
 
   const updateExpirationStatus = useCallback(async (userId, exitDate, elapsedTime, additionalCost) => {
     try {
-      console.log(additionalCost);
-      
       await axios.put(`https://projket2.onrender.com/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
       handleGetData();
     } catch (error) {
@@ -43,7 +40,6 @@ function UserTable() {
     const overtimeMinutes = Math.ceil(overdueTime / 60);
     const costPerMinute = 0.5;
     const costPer5Minute = 1.5;
-    handleAdditionalCostChange(countdown, exitDate, check);
     return overtimeMinutes === 1 ? overtimeMinutes * costPerMinute : overtimeMinutes * costPer5Minute;
   };
 
@@ -75,14 +71,6 @@ function UserTable() {
       }
     });
   }, [data, currentTime, handleStop]);
-
-  const handleAdditionalCostChange = (userId, countdown, exitDate, check) => {
-    const additionalCost = calculateAdditionalCost(countdown, exitDate, check);
-    if (additionalCostRef.current[userId] !== additionalCost) {
-      additionalCostRef.current[userId] = additionalCost;
-      updateExpirationStatus(userId, new Date().toISOString(), calculateOverdueTime(exitDate), additionalCost);
-    }
-  };
 
   const calculateTimeDifference = (entryDate, exitDate) => {
     const entryTime = new Date(entryDate).getTime();
