@@ -96,7 +96,7 @@ function UserTable() {
           <input
             type='text'
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {setSearch(e.target.value);setIsRowClicked(false);setClickedId(null)}}
             placeholder='search...'
           />
           <button onClick={() => handleIdChange(search)}>STOP</button>
