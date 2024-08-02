@@ -35,16 +35,23 @@ function UserTable() {
   const calculateAdditionalCost = useCallback((userId, countdown, exitDate, check) => {
     const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
     if (check < countdown) {
-      return 0;
+        return 0;
     }
     const overtimeMinutes = Math.ceil(overdueTime / 60);
     const costPerMinute = 0.5;
-    const costPer5Minute = 1.5;
-    const addCost = overtimeMinutes === 1 ? overtimeMinutes * costPerMinute : overtimeMinutes * costPer5Minute;
+    const costPer5Minutes = 1.5;
+    let addCost = 0;
+
+    // Calculate cost based on the overtime minutes
+    if (overtimeMinutes <= 5) {
+        addCost = overtimeMinutes * costPerMinute;
+    } else {
+        addCost = (Math.floor(overtimeMinutes / 5) * costPer5Minutes) + ((overtimeMinutes % 5) * costPerMinute);
+    }
+
     updateExpirationStatus(userId, new Date().toISOString(), overdueTime, addCost);
     return addCost;
-  }, [updateExpirationStatus, countdown, exitDate, check]); // Added dependencies here
-  
+}, [updateExpirationStatus]);
 
   const handleStop = useCallback((userId, exitDate) => {
     const overdueTime = calculateOverdueTime(exitDate);
