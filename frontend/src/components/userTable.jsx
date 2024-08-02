@@ -74,7 +74,7 @@ function UserTable() {
 
   const filteredData = search
     ? data.filter(res => 
-        res.id === search || res.imie.toUpperCase().includes(search.toUpperCase())
+        res.id.toString().includes(search.toString()) || res.imie.toUpperCase().includes(search.toUpperCase())
       )
     : data;
 
