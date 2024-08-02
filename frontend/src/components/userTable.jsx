@@ -70,7 +70,7 @@ function UserTable() {
     if (newId) {
       const confirmStop = window.confirm("Czy jesteś pewien, że chcesz zatrzymać czas dla tego użytkownika?");
       if (confirmStop) {
-        localStorage.setItem('stopID', newId);
+        handleStop(newId, new Date().toISOString());
       }
     }
   };
