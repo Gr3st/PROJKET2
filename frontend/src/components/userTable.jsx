@@ -48,7 +48,7 @@ function UserTable() {
     const countdown = data.find(res=>res.id===userId).countdown;
     const additionalCost = calculateAdditionalCost(exitDate, overdueTime, countdown);
     updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
-  }, [updateExpirationStatu,data]);
+  }, [updateExpirationStatus,data]);
 
   useEffect(() => {
     handleGetData();
