@@ -2,11 +2,12 @@
 import '../style/userForm.css';
 import axios from 'axios';
 import { useGetData } from '../services/useGetData';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 
 function UserTable() {
   const { data, handleGetData } = useGetData();
   const [currentTime, setCurrentTime] = useState(Date.now());
+  const additionalCostRef = useRef({});
 
   const deleteUser = async (userId) => {
     try {
@@ -33,7 +34,7 @@ function UserTable() {
     return overdueTime > 0 ? overdueTime : 0;
   };
 
-  const calculateAdditionalCost = useCallback((userId, countdown, exitDate, check) => {
+  const calculateAdditionalCost = (countdown, exitDate, check) => {
     const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
     if (check < countdown) {
       return 0;
@@ -41,15 +42,14 @@ function UserTable() {
     const overtimeMinutes = Math.ceil(overdueTime / 60);
     const costPerMinute = 0.5;
     const costPer5Minute = 1.5;
-    const additionalCost = overtimeMinutes === 1 ? overtimeMinutes * costPerMinute : overtimeMinutes * costPer5Minute;
-    updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
-    return additionalCost;
-  }, [updateExpirationStatus]);
+    return overtimeMinutes === 1 ? overtimeMinutes * costPerMinute : overtimeMinutes * costPer5Minute;
+  };
 
   const handleStop = useCallback((userId, exitDate) => {
     const overdueTime = calculateOverdueTime(exitDate);
-    calculateAdditionalCost(userId, overdueTime);
-  }, [calculateAdditionalCost]);
+    const additionalCost = calculateAdditionalCost(overdueTime);
+    updateExpirationStatus(userId, new Date().toISOString(), overdueTime, additionalCost);
+  }, [updateExpirationStatus]);
 
   useEffect(() => {
     handleGetData();
@@ -73,6 +73,14 @@ function UserTable() {
       }
     });
   }, [data, currentTime, handleStop]);
+
+  const handleAdditionalCostChange = (userId, countdown, exitDate, check) => {
+    const additionalCost = calculateAdditionalCost(countdown, exitDate, check);
+    if (additionalCostRef.current[userId] !== additionalCost) {
+      additionalCostRef.current[userId] = additionalCost;
+      updateExpirationStatus(userId, new Date().toISOString(), calculateOverdueTime(exitDate), additionalCost);
+    }
+  };
 
   const calculateTimeDifference = (entryDate, exitDate) => {
     const entryTime = new Date(entryDate).getTime();
@@ -99,7 +107,7 @@ function UserTable() {
           <div className="table-cell">{res.email}</div>
           <div className="table-cell">{res.id}</div>
           <div className="table-cell">
-            {res.exitDate ? calculateAdditionalCost(res.id, res.countdown, res.exitDate, Math.floor(calculateTimeDifference(res.entryDate, res.exitDate))) + res.cena : res.cena}
+            {res.exitDate ? calculateAdditionalCost(res.countdown, res.exitDate, Math.floor(calculateTimeDifference(res.entryDate, res.exitDate))) + res.cena : res.cena}
           </div>
           <div className="table-cell">
             {!res.exitDate ? (
