@@ -7,7 +7,8 @@ function UserTable() {
   const { data, handleGetData } = useGetData();
   const [currentTime, setCurrentTime] = useState(Date.now());
   const [search, setSearch] = useState('');
-  const [uid, setUID] = useState(false);
+  const [clickedId, setClickedId] = useState(null);
+  const [isRowClicked, setIsRowClicked] = useState(false);
 
   const deleteUser = async (userId) => {
     try {
@@ -43,11 +44,11 @@ function UserTable() {
 
   const calculateAdditionalCost = (countdown, exitDate, check) => {
     const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
-    if(check < countdown){
+    if (check < countdown) {
       return 0;
     }
     const overtimeMinutes = Math.ceil(overdueTime / 60);
-    const costPerMinute = 0.5; // Adjust this as needed for specific cost calculations
+    const costPerMinute = 0.5;
     const costPer5Minute = 1.5;
     return overtimeMinutes === 1 ? overtimeMinutes * costPerMinute : overtimeMinutes * costPer5Minute;
   };
@@ -74,7 +75,7 @@ function UserTable() {
       }
     }
   };
-  
+
   const calculateTimeDifference = (entryDate, exitDate) => {
     const entryTime = new Date(entryDate).getTime();
     const exitTime = new Date(exitDate).getTime();
@@ -82,17 +83,11 @@ function UserTable() {
     return timeDifference;
   };
 
-  const filteredData = search
-    ? data.filter(res => 
-      res.id.toString().includes(search.toString()) || res.imie.toUpperCase().includes(search.toUpperCase())
-      ) : uid ? data.filter(res => 
-        res.id === parseInt(search))
-    : data;
-  // const filteredDataID = uid
-  // ? data.filter(res => 
-  //   res.id === parseInt(search)
-  //   )
-  // : data;
+  const filteredData = isRowClicked
+    ? data.filter(res => res.id === clickedId)
+    : search
+      ? data.filter(res => res.id.toString().includes(search.toString()) || res.imie.toUpperCase().includes(search.toUpperCase()))
+      : data;
 
   return (
     <div className="user-table">
@@ -117,7 +112,7 @@ function UserTable() {
         <div className="column-header">Akcje</div>
       </div>
       {filteredData.map(res => (
-        <div className="table-row" key={res.id} onClick={()=>{setSearch(res.id);setUID(!uid)}}>
+        <div className="table-row" key={res.id} onClick={() => { setClickedId(res.id); setIsRowClicked(!isRowClicked); }}>
           <div className="table-cell">{res.imie}</div>
           <div className="table-cell">{res.nazwisko}</div>
           <div className="table-cell">{res.email}</div>
@@ -125,10 +120,10 @@ function UserTable() {
           <div className="table-cell">
             {res.exitDate
               ? calculateAdditionalCost(
-                  res.countdown,
-                  res.exitDate,
-                  Math.floor(calculateTimeDifference(res.entryDate, res.exitDate))
-                ) + res.cena
+                res.countdown,
+                res.exitDate,
+                Math.floor(calculateTimeDifference(res.entryDate, res.exitDate))
+              ) + res.cena
               : res.cena
             }
           </div>
