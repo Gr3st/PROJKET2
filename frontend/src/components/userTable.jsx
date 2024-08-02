@@ -22,6 +22,7 @@ function UserTable() {
   const updateExpirationStatus = useCallback(async (userId, exitDate, elapsedTime, additionalCost) => {
     try {
       console.log(additionalCost);
+      
       await axios.put(`https://projket2.onrender.com/user/${userId}/expiration`, { exitDate, elapsedTime, additionalCost });
       handleGetData();
     } catch (error) {
