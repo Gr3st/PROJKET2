@@ -90,7 +90,10 @@ function UserTable() {
         <div className="column-header">CZAS</div>
         <div className="column-header">Akcje</div>
       </div>
-      {data.filter(res=>res.id===search||res.imie.toUpperCase()===search.toUpperCase()).map(res => (
+      {data.filter(res => 
+    search && 
+    (res.id === search || res.imie.toUpperCase().includes(search.toUpperCase()))
+  ).map(res => (
         <div className="table-row" key={res.id}>
           <div className="table-cell">{res.imie}</div>
           <div className="table-cell">{res.nazwisko}</div>
