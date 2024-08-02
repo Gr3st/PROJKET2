@@ -42,15 +42,13 @@ function UserTable() {
 
   const calculateAdditionalCost = (countdown, exitDate, check) => {
     const overdueTime = (Date.now() - new Date(exitDate).getTime()) / 1000;
-    if(check<countdown){
+    if(check < countdown){
       return 0;
     }
     const overtimeMinutes = Math.ceil(overdueTime / 60);
-    // return Math.floor(overtimeMinutes===1?overtimeMinutes / 1: overtimeMinutes/5); 
-    // const overtimeMinutes = Math.ceil(overdueTime / 60);
     const costPerMinute = 0.5; // Adjust this as needed for specific cost calculations
     const costPer5Minute = 1.5;
-    return overtimeMinutes===1?overtimeMinutes * costPerMinute:overtimeMinutes * costPer5Minute;
+    return overtimeMinutes === 1 ? overtimeMinutes * costPerMinute : overtimeMinutes * costPer5Minute;
   };
 
   const handleStop = useCallback((userId, exitDate) => {
@@ -74,11 +72,22 @@ function UserTable() {
     return timeDifference;
   };
 
+  const filteredData = search
+    ? data.filter(res => 
+        res.id === search || res.imie.toUpperCase().includes(search.toUpperCase())
+      )
+    : data;
+
   return (
     <div className="user-table">
       <div className="table-header">
         <div className="column-header">
-          <input type='text' onChange={(e)=>setSearch(e.target.value)} placeholder='search...'></input>
+          <input
+            type='text'
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder='search...'
+          />
         </div>
       </div>
       <div className="table-header">
@@ -90,28 +99,30 @@ function UserTable() {
         <div className="column-header">CZAS</div>
         <div className="column-header">Akcje</div>
       </div>
-      {data.filter(res => 
-    search && 
-    (res.id === search || res.imie.toUpperCase().includes(search.toUpperCase()))
-  ).map(res => (
+      {filteredData.map(res => (
         <div className="table-row" key={res.id}>
           <div className="table-cell">{res.imie}</div>
           <div className="table-cell">{res.nazwisko}</div>
           <div className="table-cell">{res.email}</div>
           <div className="table-cell">{res.id}</div>
-          <div className="table-cell">{res.exitDate?calculateAdditionalCost(res.countdown, res.exitDate, Math.floor(calculateTimeDifference(res.entryDate, res.exitDate)))+ res.cena: res.cena}</div>
-          {/* <div className="table-cell">{calculateOverdueTime(res.exitDate)>0?res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate)):res.cena}</div> */}
-          {/* <div className="table-cell">{res.countdown === calculateTimeDifference(res.entryDate, res.exitDate)?res.cena : res.cena + calculateAdditionalCost(calculateOverdueTime(res.exitDate))}</div>
-           */}
           <div className="table-cell">
-            {console.log(Math.floor(calculateTimeDifference(res.entryDate, res.exitDate))+" cd"+res.countdown)}
+            {res.exitDate
+              ? calculateAdditionalCost(
+                  res.countdown,
+                  res.exitDate,
+                  Math.floor(calculateTimeDifference(res.entryDate, res.exitDate))
+                ) + res.cena
+              : res.cena
+            }
+          </div>
+          <div className="table-cell">
             {!res.exitDate ? (
               <div>
                 {Math.floor(res.remainingTime / 3600)}h {Math.floor((res.remainingTime % 3600) / 60)}m {Math.floor(res.remainingTime % 60)}s 
                 <button onClick={() => handleStop(res.id, res.exitDate)}>STOP</button>
               </div>
             ) : (
-              res.remainingTime <= 0 && Math.floor(calculateTimeDifference(res.entryDate, res.exitDate)) >= res.countdown? (
+              res.remainingTime <= 0 && Math.floor(calculateTimeDifference(res.entryDate, res.exitDate)) >= res.countdown ? (
                 <>
                   Przekroczono czas o {Math.floor(calculateOverdueTime(res.exitDate) / 3600)}h {Math.floor((calculateOverdueTime(res.exitDate) % 3600) / 60)}m {Math.floor(calculateOverdueTime(res.exitDate) % 60)}s
                 </>
