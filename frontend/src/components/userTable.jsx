@@ -43,7 +43,8 @@ function UserTable() {
     const addCost = overtimeMinutes === 1 ? overtimeMinutes * costPerMinute : overtimeMinutes * costPer5Minute;
     updateExpirationStatus(userId, new Date().toISOString(), overdueTime, addCost);
     return addCost;
-  },[updateExpirationStatus]);
+  }, [updateExpirationStatus, countdown, exitDate, check]); // Added dependencies here
+  
 
   const handleStop = useCallback((userId, exitDate) => {
     const overdueTime = calculateOverdueTime(exitDate);
