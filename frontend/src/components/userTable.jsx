@@ -87,7 +87,7 @@ function UserTable() {
       res.id.toString().includes(search.toString()) || res.imie.toUpperCase().includes(search.toUpperCase())
       )
     : data;
-  const filteredDataID = search
+  const filteredDataID = uid
   ? data.filter(res => 
     res.id === parseInt(search)
     )
