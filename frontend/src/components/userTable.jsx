@@ -85,13 +85,14 @@ function UserTable() {
   const filteredData = search
     ? data.filter(res => 
       res.id.toString().includes(search.toString()) || res.imie.toUpperCase().includes(search.toUpperCase())
-      )
+      ) : uid ? data.filter(res => 
+        res.id === parseInt(search))
     : data;
-  const filteredDataID = uid
-  ? data.filter(res => 
-    res.id === parseInt(search)
-    )
-  : data;
+  // const filteredDataID = uid
+  // ? data.filter(res => 
+  //   res.id === parseInt(search)
+  //   )
+  // : data;
 
   return (
     <div className="user-table">
@@ -115,7 +116,7 @@ function UserTable() {
         <div className="column-header">CZAS</div>
         <div className="column-header">Akcje</div>
       </div>
-      {uid?filteredDataID:filteredData.map(res => (
+      {filteredData.map(res => (
         <div className="table-row" key={res.id} onClick={()=>{setSearch(res.id);setUID(!uid)}}>
           <div className="table-cell">{res.imie}</div>
           <div className="table-cell">{res.nazwisko}</div>
