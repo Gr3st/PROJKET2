@@ -7,6 +7,7 @@ function UserTable() {
   const { data, handleGetData } = useGetData();
   const [currentTime, setCurrentTime] = useState(Date.now());
   const [search, setSearch] = useState('');
+  const [uid, setUID] = useState(null);
 
   const deleteUser = async (userId) => {
     try {
@@ -65,6 +66,15 @@ function UserTable() {
     });
   }, [data, currentTime, handleStop]);
 
+  const handleIdChange = (newId) => {
+    if (newId) {
+      const confirmStop = window.confirm("Czy jesteś pewien, że chcesz zatrzymać czas dla tego użytkownika?");
+      if (confirmStop) {
+        localStorage.setItem('stopID', newId);
+      }
+    }
+  };
+  
   const calculateTimeDifference = (entryDate, exitDate) => {
     const entryTime = new Date(entryDate).getTime();
     const exitTime = new Date(exitDate).getTime();
@@ -88,6 +98,7 @@ function UserTable() {
             onChange={(e) => setSearch(e.target.value)}
             placeholder='search...'
           />
+          <button onClick={() => handleIdChange(uid)}>STOP</button>
         </div>
       </div>
       <div className="table-header">
@@ -100,7 +111,7 @@ function UserTable() {
         <div className="column-header">Akcje</div>
       </div>
       {filteredData.map(res => (
-        <div className="table-row" key={res.id}>
+        <div className="table-row" key={res.id} onClick={()=>setUID(res.id)}>
           <div className="table-cell">{res.imie}</div>
           <div className="table-cell">{res.nazwisko}</div>
           <div className="table-cell">{res.email}</div>
