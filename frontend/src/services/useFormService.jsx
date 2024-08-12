@@ -17,7 +17,7 @@ export function useFormService() {
   const handleSendData = async () => {
     try {
       console.log('Sending data:', postData);
-      const res = await axios.post('https://projket2.onrender.com/user', postData);
+      const res = await axios.post('http://localhost:4000/user', postData);
       console.log('Response:', res);
       setImie('');
       setNazwisko('');

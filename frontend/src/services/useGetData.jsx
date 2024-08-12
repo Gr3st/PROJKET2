@@ -6,7 +6,7 @@ export function useGetData() {
 
   const handleGetData = async () => {
     try {
-      const res = await axios.get('https://projket2.onrender.com/userData');
+      const res = await axios.get('http://localhost:4000/userData');
       setData(res.data);
     } catch (err) {
       console.error('Error sending message:', err);

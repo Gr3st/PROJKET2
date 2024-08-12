@@ -24,7 +24,7 @@
       "localhost",
       ".localhost"
     ],
-    "proxy": "https://projket2.onrender.com/"
+    "proxy": "http://localhost:4000/"
   },
   "eslintConfig": {
     "extends": [

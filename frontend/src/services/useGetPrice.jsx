@@ -6,7 +6,7 @@ export function useGetPrice() {
 
   const handleGetPrice = async () => {
     try {
-      const res = await axios.get('https://projket2.onrender.com/getPrice');
+      const res = await axios.get('http://localhost:4000/getPrice');
       setDataPrice(res.data);
       console.log(res.data);
     } catch (err) {
