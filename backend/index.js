@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const corsOptions = {
-    origin: 'https://webtest.com.pl',
+    origin: 'https://fluffy-succotash-7q7wx7wpp9w2rx9r-3000.app.github.dev/',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     allowedHeaders: 'Content-Type,Authorization',
@@ -37,8 +37,6 @@ app.listen(port, () => {
 // Function to initialize default prices
 const initializeDefaultPrices = async () => {
     const defaultPrices = [
-        { timeRange: "00:01", cena: "0.5" },
-        { timeRange: "00:05", cena: "2" },
         { timeRange: "01:00", cena: "15" },
         { timeRange: "02:00", cena: "30" },
         { timeRange: "24:00", cena: "200" },

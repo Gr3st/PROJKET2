@@ -46,7 +46,7 @@ const PanelAdmin = () => {
 
   const deleteTimeRange = async (timeRange) => {
     try {
-      const response = await axios.delete(`https://projket2.onrender.com/price/${timeRange}`);
+      const response = await axios.delete(`https://fluffy-succotash-7q7wx7wpp9w2rx9r-4000.app.github.dev/price/${timeRange}`);
       console.log('Time range deleted:', response.data);
       handleGetPrice();
     } catch (error) {
@@ -56,7 +56,7 @@ const PanelAdmin = () => {
 
   const updatePrice = async (cena, nowaCena) => {
     try {
-      await axios.put(`https://projket2.onrender.com/price/update`, { cena, nowaCena });
+      await axios.put(`https://fluffy-succotash-7q7wx7wpp9w2rx9r-4000.app.github.dev/price/update`, { cena, nowaCena });
       handleGetPrice();
     } catch (error) {
       console.error('Error updating price:', error);
